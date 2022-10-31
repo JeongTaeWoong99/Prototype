@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/Assets/Script/Boss/Movement2D.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Enemy/EnemyArrow.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Enemy/EnemyController.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Intro/KillTriger.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Intro/MainMenu.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/NPC/NpcTypingEffect.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Object/Breakables.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Object/Broken_Pieces.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Object/ObjectExit.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Player/PlayerController.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Player/PlayerHpController.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Player/PlayerSkill.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/UI/Background.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/UI/CameraController.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/UI/UIController.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/UI/UIStoryTalk.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/물체/Breakables.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/보스/Movement2D.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/적/EnemyArrow.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/적/EnemyBullet.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/적/EnemyController.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/주인공/PlayerHpController.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/주인공/PlayerSkill.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Object/Breakables.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Object/Broken_Pieces.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Source/Other/Korean.txt" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Source/Pakage/Scripts/Map/Camera_Controller.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Source/Pakage/Scripts/Object/Breakables.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Source/Pakage/Scripts/Object/Broken_Pieces.cs" charset="x-windows-949" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

@@ -1,0 +1,29 @@
+using System;
+using System.Collections;
+using UnityEngine;
+
+public class BossBodytakeDamage : MonoBehaviour
+{
+    private SpriteRenderer spriteRenderer;
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public void TakeDamage(float damage)
+    {
+        BossHP.instance.currentHP -= damage;
+        
+        StopCoroutine("HitColorAnimation");
+        StartCoroutine("HitColorAnimation");
+    }
+
+    private IEnumerator HitColorAnimation()
+    {
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.05f);
+        spriteRenderer.color = Color.white;
+    }
+    
+}
