@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -22,7 +21,7 @@ public class BossBodytakeDamage : MonoBehaviour
     private IEnumerator HitColorAnimation()
     {
         spriteRenderer.color = Color.red;
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(0.1f);
         spriteRenderer.color = Color.white;
     }
     

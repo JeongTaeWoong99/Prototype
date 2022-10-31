@@ -6,13 +6,9 @@ public class BossHP : MonoBehaviour
     public static BossHP instance;
     
     [SerializeField]
-    public  float          maxHP = 1000;
+    public  float          maxHP;
     public  float          currentHP;
     private SpriteRenderer spriteRenderer;
-
-    // 슬라이더 기능
-    // public float MaxHP     => maxHP;
-    // public float CurrentHP => currentHP;
 
     private void Awake()
     {
@@ -39,12 +35,8 @@ public class BossHP : MonoBehaviour
 
     private IEnumerator HitColorAnimation()
     {
-        // 보스 색상을 빨간색으로
         spriteRenderer.color = Color.red;
-        // 0.05초 동안 대기
-        yield return new WaitForSeconds(0.05f);
-        // 보스의 색상을 원래 색상인 하얀색으로
-        // (원래 색상이 하얀색이 아닐 경우 원래 색상 변수 선언)
+        yield return new WaitForSeconds(0.1f);
         spriteRenderer.color = Color.white;
     }
 }
