@@ -87,7 +87,7 @@ public class BossWeapon : MonoBehaviour
     {
         // 팔 펴지는 시간
         yield return new WaitForSeconds(3.0f);
-        UIController.instance.bossSlider.gameObject.SetActive(true);
+        UIController.instance.bossSlider.gameObject.SetActive(true);            // 보스 HP슬라이더 보이게
         
         float   attackRate       = 2f * constrainSpeed;
         while (true)

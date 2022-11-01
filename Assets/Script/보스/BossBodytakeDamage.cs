@@ -12,7 +12,7 @@ public class BossBodytakeDamage : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        BossHP.instance.currentHP -= damage;
+        BossHP.instance.TakeDamage(damage);
         
         StopCoroutine("HitColorAnimation");
         StartCoroutine("HitColorAnimation");

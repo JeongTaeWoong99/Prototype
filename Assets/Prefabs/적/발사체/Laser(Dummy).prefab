@@ -153,6 +153,7 @@ MonoBehaviour:
   beamBool: 0
   missileBool: 0
   dummyBool: 1
+  damage: 25
   speed: 4.5
   minusFixedUpdateSpeed: 0
   minusMaxValue: 0

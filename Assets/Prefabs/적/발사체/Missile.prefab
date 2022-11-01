@@ -153,9 +153,10 @@ MonoBehaviour:
   beamBool: 0
   missileBool: 1
   dummyBool: 0
+  damage: 50
   speed: 150
   minusFixedUpdateSpeed: 0
   minusMaxValue: 0
-  rotSpeed: 0.1
+  rotSpeed: 0.08
   currentTarget: {fileID: 0}
   anglePivotValue: 0

@@ -12,8 +12,9 @@ public class EnemyBullet : MonoBehaviour
 
 	public bool beamBool;   
     public bool missileBool;
-    public bool dummyBool;  
-	
+    public bool dummyBool;
+
+    public  int   damage;
     public  float speed;     
 	public  float minusFixedUpdateSpeed;				// FixedUpdate당 감소
 	public  float minusMaxValue;						// 값 감속 최저값
@@ -95,7 +96,7 @@ public class EnemyBullet : MonoBehaviour
 		    if (other.CompareTag("Player") && PlayerHpController.instance.invincibleCount <= 0 
 		                                   && currentTarget.transform == PlayerController.instance.transform)
 		    {
-			    PlayerHpController.instance.DamagePlayer(gameObject,1);
+			    PlayerHpController.instance.DamagePlayer(gameObject,damage);
 			    Instantiate(boomEffectToPlayer, gameObject.transform.position, quaternion.identity);
 			    Destroy(gameObject);
 		    }
@@ -103,17 +104,17 @@ public class EnemyBullet : MonoBehaviour
 		    // 표적(적)
 		    if (currentTarget.transform != PlayerController.instance.transform)
 		    {
-			    // 보스충돌
-			    if ((other.CompareTag("Boss")))
+			    // 보스바디 충돌
+			    if ((other.CompareTag("BossBody")))
 			    {
-				    BossHP.instance.TakeDamage(5);
+				    other.GetComponent<BossBodytakeDamage>().TakeDamage(damage);
 				    Instantiate(boomEffectToEnemy, gameObject.transform.position, quaternion.identity);
 				    Destroy(gameObject);
 			    }
 			    // 기본적충돌
 			    else if((other.CompareTag("Enemy")))
 			    {
-				    other.GetComponent<EnemyController>().DamageEnemy(50);
+				    other.GetComponent<EnemyController>().DamageEnemy(damage);
 				    Instantiate(boomEffectToEnemy, gameObject.transform.position, quaternion.identity);
 				    Destroy(gameObject);
 			    }
@@ -121,8 +122,8 @@ public class EnemyBullet : MonoBehaviour
 		    
 		    if (other.CompareTag("Object"))
 		    {
-			    if(other.GetComponent<Breakables>())
-					other.GetComponent<Breakables>().Smash();
+			    if(other.GetComponent<Breakables>()) 
+				    other.GetComponent<Breakables>().Smash();
 			    Instantiate(boomEffectToPlayer, gameObject.transform.position, quaternion.identity);
 			    Destroy(gameObject);
 		    }
@@ -139,7 +140,7 @@ public class EnemyBullet : MonoBehaviour
 	    {
 		    if (other.CompareTag("Player") && PlayerHpController.instance.invincibleCount <= 0)
             {
-			    PlayerHpController.instance.DamagePlayer(gameObject,1);
+			    PlayerHpController.instance.DamagePlayer(gameObject,damage);
 			    Instantiate(boomEffectToPlayer, gameObject.transform.position, Quaternion.identity);
 			    Destroy(gameObject);
             }
@@ -148,8 +149,9 @@ public class EnemyBullet : MonoBehaviour
             {
 	            if(other.GetComponent<Breakables>())
 		            other.GetComponent<Breakables>().Smash();
-			   Instantiate(boomEffectToPlayer, gameObject.transform.position, Quaternion.identity);
-			   Destroy(gameObject);
+	            
+	            Instantiate(boomEffectToPlayer, gameObject.transform.position, Quaternion.identity);
+			    Destroy(gameObject);
             }
              
             if (other.CompareTag("Ground"))

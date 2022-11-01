@@ -12,6 +12,7 @@ TagManager:
   - SingleUse
   - Boss
   - PlayerBullet
+  - BossBody
   layers:
   - Default
   - TransparentFX

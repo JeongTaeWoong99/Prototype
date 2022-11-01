@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -122,9 +121,9 @@ public class PlayerParing : MonoBehaviour
     {
         var originLineCreateMovePoint = createPoint.transform.position; // 스킬사용 했을 때, 초기 위치 저장
         
-        GameObject[] Bullets        = GameObject.FindGameObjectsWithTag("Bullet");  // 보이는 Bullet
-        GameObject[] visibleEnemy   = GameObject.FindGameObjectsWithTag("Enemy");   // 보이는 적
-        GameObject   existenceBoss  = GameObject.FindWithTag("Boss");               // 보스가 존재하는지
+        GameObject[] Bullets        = GameObject.FindGameObjectsWithTag("Bullet");    // 보이는 Bullet
+        GameObject[] visibleEnemy   = GameObject.FindGameObjectsWithTag("Enemy");     // 보이는 적
+        GameObject[] existenceBoss  = GameObject.FindGameObjectsWithTag("BossBody");  // 보스가 존재하는지
 
         // 처리할 Bullets 정리(보이는지)
         for (int i = 0; i < Bullets.Length; i++)
@@ -141,8 +140,10 @@ public class PlayerParing : MonoBehaviour
         }
         
         // 역추적 할 보스(존재하는지)
-        if(existenceBoss == true)
-            enemyFinalList.Add(existenceBoss);
+        for (int i = 0; i < existenceBoss.Length; i++)
+        {
+            enemyFinalList.Add(existenceBoss[i]);
+        }
         
         // 추적할 값이 있으면
         if (finalList.Count != 0)
@@ -324,7 +325,11 @@ public class PlayerParing : MonoBehaviour
                             minIndex = j;
                         }
                     }
-                    destroyList[i].GetComponent<EnemyBullet>().currentTarget =  enemyFinalList[minIndex].transform.GetChild(0);
+                    
+                    if(enemyFinalList[minIndex].CompareTag("Enemy"))
+                        destroyList[i].GetComponent<EnemyBullet>().currentTarget =  enemyFinalList[minIndex].transform.GetChild(0);
+                    else if(enemyFinalList[minIndex].CompareTag("BossBody"))
+                        destroyList[i].GetComponent<EnemyBullet>().currentTarget =  enemyFinalList[minIndex].transform;
                 }
                 // 역추적 할 적이 없다면 -> 터지기
                 else

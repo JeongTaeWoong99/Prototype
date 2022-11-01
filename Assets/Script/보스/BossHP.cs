@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class BossHP : MonoBehaviour
@@ -8,14 +7,14 @@ public class BossHP : MonoBehaviour
     [SerializeField]
     public  float          maxHP;
     public  float          currentHP;
-    private SpriteRenderer spriteRenderer;
+    //private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
         instance = this;
         
         currentHP      = maxHP;                          // 현재 체력을 최대 체력과 같게 설정
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        //spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void TakeDamage(float damage)
@@ -23,8 +22,8 @@ public class BossHP : MonoBehaviour
         // 현재 체력을 damage만큼 감소
         currentHP -= damage;
 
-        StopCoroutine("HitColorAnimation");
-        StartCoroutine("HitColorAnimation");
+        // StopCoroutine("HitColorAnimation");
+        // StartCoroutine("HitColorAnimation");
 
         // 체력이 0이하 = 보스 사망
         if (currentHP <= 0)
@@ -33,12 +32,12 @@ public class BossHP : MonoBehaviour
         }
     }
 
-    private IEnumerator HitColorAnimation()
-    {
-        spriteRenderer.color = Color.red;
-        yield return new WaitForSeconds(0.1f);
-        spriteRenderer.color = Color.white;
-        Debug.Log("실행");
-    }
+    // private IEnumerator HitColorAnimation()
+    // {
+    //     spriteRenderer.color = Color.red;
+    //     yield return new WaitForSeconds(0.1f);
+    //     spriteRenderer.color = Color.white;
+    //     Debug.Log("실행");
+    // }
 }
 

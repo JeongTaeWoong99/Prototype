@@ -35,7 +35,7 @@ public class BossMissCreate : MonoBehaviour
 	{
 		for (int j = 0; j < 3; j++)     // 3번
 		{
-			var angle = UnityEngine.Random.Range(angleMin, angleMax);
+			var angle = Random.Range(angleMin, angleMax);
 			Instantiate(spwanMiss2, transform.position, Quaternion.Euler(0f,0f,angle));
 			yield return new WaitForSeconds(0.8f);
 		}
