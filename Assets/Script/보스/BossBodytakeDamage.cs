@@ -4,7 +4,7 @@ using UnityEngine;
 public class BossBodytakeDamage : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
-
+    
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();

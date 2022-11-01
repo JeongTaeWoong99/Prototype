@@ -38,6 +38,7 @@ public class BossHP : MonoBehaviour
         spriteRenderer.color = Color.red;
         yield return new WaitForSeconds(0.1f);
         spriteRenderer.color = Color.white;
+        Debug.Log("실행");
     }
 }
 
