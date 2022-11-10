@@ -78,9 +78,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1861041603
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f860fceff168ea64d987bfd0c1da1ae0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6c97e394183a7fa469cfce32f38bb1fc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -126,7 +126,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.04, y: -0.06}
-  m_Size: {x: 0.2, y: 0.45}
+  m_Size: {x: 0.2, y: 0.6}
   m_Direction: 0
 --- !u!95 &3109861148292680613
 Animator:
@@ -167,9 +167,9 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 500
   penalty: 0
-  rangeToChasePlayer: 100
-  wanderLength: 0.5
-  pauseLength: 0.5
+  rangeToChasePlayer: 1
+  wanderLength: 0
+  pauseLength: 0
   whatIsLayer:
     serializedVersion: 2
     m_Bits: 1152
@@ -182,7 +182,7 @@ MonoBehaviour:
   arrowPrefab: {fileID: 6149817873438746071, guid: 28f2a9ab3b5cf3848a60831886395b06, type: 3}
   takeHitState: 0
   attackState: 0
-  canvas: {fileID: 8579426871887660387}
+  weaknessState: 0
 --- !u!114 &5869529498442754366
 MonoBehaviour:
   m_ObjectHideFlags: 0

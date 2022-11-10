@@ -42,6 +42,8 @@ public class EnemyController : MonoBehaviour
 	[HideInInspector]
 	public bool         attackState   = false;
 
+	public bool weaknessState = false;
+
 	
 	
 	private void Awake()
@@ -265,6 +267,14 @@ public class EnemyController : MonoBehaviour
 			Gizmos.DrawWireCube(damagePoint.transform.position, new Vector2(0.8f, 0.3f));
 		}
 	}
-	
 
+	public void WeaknessStart()
+	{
+		weaknessState = true;
+	}
+	
+	public void WeaknessEnd()
+	{
+		weaknessState = false;
+	}
 }

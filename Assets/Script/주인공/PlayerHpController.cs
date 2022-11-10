@@ -37,12 +37,12 @@ public class PlayerHpController : MonoBehaviour
             invincibleCount -= Time.deltaTime;
 
             // 투명도 정상화
-            if (invincibleCount <= 0)
-            {
-                var color = PlayerController.instance.bodySR.color;
-                color = new Color(color.r, color.g, color.b, 1f);
-                PlayerController.instance.bodySR.color = color;
-            }
+            // if (invincibleCount <= 0)
+            // {
+            //     var color = PlayerController.instance.bodySR.color;
+            //     color = new Color(color.r, color.g, color.b, 1f);
+            //     PlayerController.instance.bodySR.color = color;
+            // }
         }
 
         // 피격상태 체크해서, 카메라 흔들기
@@ -70,9 +70,9 @@ public class PlayerHpController : MonoBehaviour
                 PlayerController.instance.theRB.AddForce(transform.right * random);
 
             // 투명도 50% 설정
-            var color = PlayerController.instance.bodySR.color;
-            color = new Color(color.r, color.g, color.b, 0.5f);
-            PlayerController.instance.bodySR.color = color;
+            // var color = PlayerController.instance.bodySR.color;
+            // color = new Color(color.r, color.g, color.b, 0.5f);
+            // PlayerController.instance.bodySR.color = color;
             
             // 플레이어 사망했을 때
             if (currentHealth <= 0)
@@ -80,13 +80,14 @@ public class PlayerHpController : MonoBehaviour
                 UIController.instance.deathState = true;                                                     // 사망상태 true
                 UIController.instance.deathScreen.SetActive(true);                                           // 사망상태 true
 
-                GameObject playerBody = PlayerController.instance.gameObject;
-                playerBody.SetActive(false);                                       // 플레이어 비활성화
-                PlayerController.instance.deathAnim.transform.localScale = playerBody.transform.localScale;                             // 스케일 동일하게(좌우)
-                PlayerController.instance.theRB.velocity = Vector2.zero;                                     // 이동 멈춤
-
-                for(int i = 0;i<1;i++)
-                    Instantiate(PlayerController.instance.deathAnim, transform.position, Quaternion.identity);   // 사망 프리팹 생성
+                // 사망 프리팹 생성
+                // 1회 생성 후 null 넣어서 중복생성 방지
+                if (PlayerController.instance.deathPrefabs)
+                {
+                    Instantiate(PlayerController.instance.deathPrefabs, transform.position, Quaternion.identity);   
+                    PlayerController.instance.deathPrefabs = null;
+                    PlayerController.instance.gameObject.SetActive(false);                                                                 // 플레이어 비활성화
+                }
             }
 
             // UI값 갱신
@@ -108,7 +109,9 @@ public class PlayerHpController : MonoBehaviour
     
     public void CameraShakeCheck()
     {
-        if (PlayerController.instance.takeHitState == false)    // false일 때 애니메이션 재생 중
+        // if (PlayerController.instance.takeHitState == false)    // false일 때 애니메이션 재생 중
+        //     CameraShake.instance.shakeCoroutineState = true;
+        if (PlayerController.instance.animator.GetCurrentAnimatorStateInfo(0).IsName("Player_TakeHit"))    // false일 때 애니메이션 재생 중
             CameraShake.instance.shakeCoroutineState = true;
         else
             CameraShake.instance.shakeCoroutineState = false;

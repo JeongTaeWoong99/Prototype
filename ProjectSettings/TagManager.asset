@@ -50,17 +50,20 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: BackBoss
+    uniqueID: 3290676109
+    locked: 0
+  - name: GADRAIL
+    uniqueID: 2612579075
+    locked: 0
   - name: Object
     uniqueID: 3250905421
-    locked: 0
-  - name: SkillEffect
-    uniqueID: 3246670185
     locked: 0
   - name: Enemy
     uniqueID: 1861041603
     locked: 0
-  - name: GADRAIL
-    uniqueID: 2612579075
+  - name: SkillEffect
+    uniqueID: 3246670185
     locked: 0
   - name: Player
     uniqueID: 838999779

@@ -254,7 +254,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -273,7 +273,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 838999779
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: -1210974702, guid: 57727f5148a37d24fb64415526d72a41, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -315,7 +315,7 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.31}
+  m_Offset: {x: 0, y: -0.37}
   serializedVersion: 2
   m_Radius: 0.07
 --- !u!50 &6664219822711538884
@@ -335,7 +335,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1.5
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -375,12 +375,12 @@ MonoBehaviour:
   bodySR: {fileID: 6664219822711538883}
   animator: {fileID: 6664219822711538888}
   bladeAnimator: {fileID: 4424170597965868474}
-  deathAnim: {fileID: 7926985964551502917, guid: 76f92cb61ae80b7479f6e2dc62c6f8e3, type: 3}
+  deathPrefabs: {fileID: 7926985964551502917, guid: 76f92cb61ae80b7479f6e2dc62c6f8e3, type: 3}
   rollState: 0
   inputX: 0
-  moveSpeed: 2
-  dashSpeed: 6
-  dashCooldown: 0.75
+  moveSpeed: 3
+  dashSpeed: 8
+  dashCooldown: 1
   jumpForce: 4
   groundLayer:
     serializedVersion: 2
@@ -389,9 +389,9 @@ MonoBehaviour:
   attackState: 0
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 17920
+    m_Bits: 26112
   damagePoint: {fileID: 6664219822278812800}
-  damageToGive: 15
+  damageToGive: 100
   takeHitState: 0
   skillState: 0
   autoMoveRight: 0
@@ -431,7 +431,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentHealth: 0
-  maxHealth: 1000
+  maxHealth: 10000
   penalty: 0
   damageInvincibleLength: 0
   invincibleCount: 0
@@ -468,7 +468,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6664219822711538880}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e8f6d3c6e4250e84192f5b34ce9e71bc, type: 3}
   m_Name: 
@@ -551,7 +551,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 838999779
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 1
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

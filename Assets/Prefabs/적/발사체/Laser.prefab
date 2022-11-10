@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -9119660477579298330}
   - component: {fileID: 6149817873438746066}
   - component: {fileID: -2660462440310942376}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: Laser
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1996522897
-  m_SortingLayer: 6
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: d5d815e7c27c68f4aa9b99b5da96415b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -153,6 +153,7 @@ MonoBehaviour:
   beamBool: 1
   missileBool: 0
   dummyBool: 0
+  damage: 25
   speed: 4.5
   minusFixedUpdateSpeed: 0
   minusMaxValue: 0

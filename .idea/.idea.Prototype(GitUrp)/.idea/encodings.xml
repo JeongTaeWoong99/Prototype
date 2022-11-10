@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" addBOMForNewFiles="with BOM under Windows, with no BOM otherwise">
+    <file url="file://$PROJECT_DIR$/Assets/Script/NPC/NpcTypingEffect.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/UI/Background.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/UI/CameraController.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/Script/UI/UIController.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/UI/UIStoryTalk.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/물체/Breakables.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/물체/Broken_Pieces.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/물체/ObjectExit.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/Script/보스/Movement2D.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/Script/적/EnemyBullet.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/Script/적/EnemyController.cs" charset="x-windows-949" />

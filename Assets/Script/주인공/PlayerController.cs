@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     public Animator       animator;
     public Animator       bladeAnimator;
     
-    public GameObject     deathAnim;                    
+    public GameObject     deathPrefabs;                 // 사망 프리팹         
 
     [HideInInspector]
     public  bool  rollState    = false;                 
@@ -23,7 +23,9 @@ public class PlayerController : MonoBehaviour
     public  float dashSpeed;                            
     public  float dashCooldown;                         
     private float dashCoolCounter;                      
-    private float dashInputX;                           
+    private float dashInputX;
+    [HideInInspector]
+    public float originGavityScale;                     // 원래의 중력 -> 대쉬시 반의 값으로 변환
     
     public  float jumpForce;                            
     //private bool  isLongJump = false;                   
@@ -53,9 +55,6 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector]
     public bool  skillState;          // 스킬 사용 중 false // 사용 중 x true     
-    
-    public bool autoMoveRight;        // 오토
-    public bool autoMoveLeft;         // 오토
 
     private void Awake()
     {
@@ -66,7 +65,8 @@ public class PlayerController : MonoBehaviour
         animator          = GetComponent<Animator>();
         bodySR            = GetComponent<SpriteRenderer>();
 
-        activeMoveSpeed = moveSpeed;                            
+        activeMoveSpeed = moveSpeed;
+        originGavityScale = theRB.gravityScale;
 
         // 클립을 모두 받아와서, 이름별로 총 재생길이 저장
         clips = animator.runtimeAnimatorController.animationClips;
@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
         StateCheckTimer();
         
         if (attackState == true && rollState == true && takeHitState == true && skillState  == true && PlayerParing.instance.paringState == true &&
-            UIStoryTalk.instance.storyTalkEndState == true && UIEvent.instance.eventState == true)
+            UIStoryTalk.instance.storyTalkEndState == true && UIEvent.instance.eventState == true && UIAutoSystem.instance.autoEventState == true)
         {
             //이동
             inputX = Input.GetAxisRaw("Horizontal");                                    // right left +1 -1
@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
                 transform.localScale = new Vector2(1f, 1f);
             }
             else if (inputX < 0)
-            {
+            {   
                 transform.localScale = new Vector2(-1f, 1f);
             }
 
@@ -140,17 +140,11 @@ public class PlayerController : MonoBehaviour
         // 오토무브를 위한 조건
         else
         {
-            if (autoMoveRight &&  UIStoryTalk.instance.storyTalkEndState == true)
+            // 제어권없는 상태에서 MoveAtion 중 일때
+            if (UIAutoSystem.instance.autoEventState == false && theRB.velocity != Vector2.zero)
             {
-                theRB.velocity = new Vector2(+2.0f, theRB.velocity.y); // 이동
                 animator.SetBool("Walking", true);
             }
-            else if (autoMoveLeft &&  UIStoryTalk.instance.storyTalkEndState == true)
-            {
-                theRB.velocity = new Vector2(-2.0f, theRB.velocity.y); // 이동
-                animator.SetBool("Walking", true);
-            }
-            // 기본상태
             else
             {
                 animator.SetBool("Walking", false);
@@ -158,27 +152,19 @@ public class PlayerController : MonoBehaviour
             
         }
 
-        // 구르기 조건
-        if (rollState == true && takeHitState == true&& skillState == true &&
+        // 대쉬 조건
+        if (Input.GetKey(KeyCode.S) && rollState == true && takeHitState == true&& skillState == true &&
             UIStoryTalk.instance.storyTalkEndState == true && UIEvent.instance.eventState == true)
         {
-            // 구르기
-            if (((Input.GetKey(KeyCode.S) && isGrounded == true && !Input.GetKey("up"))))
+            if (dashCoolCounter <= 0)
             {
-                if (dashCoolCounter <= 0)
+                if (Input.GetKey(KeyCode.LeftArrow))
                 {
-                    if (Input.GetKey(KeyCode.LeftArrow))
-                    {
-                        Dash();
-                        dashInputX = -1.0f;                          
-                        transform.localScale = new Vector2(-1f, 1f);
-                    }
-                    else if ((Input.GetKey(KeyCode.RightArrow)))
-                    {
-                        Dash();
-                        dashInputX = 1.0f;                          
-                        transform.localScale = new Vector2(1f, 1f);
-                    }
+                    Dash(-1f);
+                }
+                else if ((Input.GetKey(KeyCode.RightArrow)))
+                {
+                    Dash(1f);
                 }
             }
         }
@@ -198,21 +184,23 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
+        //theRB.AddForce(transform.right * 50f);
+        
         //currentAttack++;
-
+        
         // Loop back to one after third attack
         // if (currentAttack > 3)
         //     currentAttack = 1;
         currentAttack = 1;
-
+        
         // Reset Attack combo if time since last attack is too large
         // if (timeSinceAttack > 1.0f)
         //     currentAttack = 1;
-
+        
         // Call one of three attack animations "Attack1", "Attack2", "Attack3"
         animator.SetTrigger("Attack_" + currentAttack);
         //bladeAnimator.SetTrigger("Attack_" + currentAttack);
-
+        
         // Reset timer
         // timeSinceAttack = 0.0f;
     }
@@ -231,12 +219,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Dash()
+    private void Dash(float direction)
 	{
-        //bladeAnimator.SetTrigger("Clear");
-        animator.SetTrigger("Dash");
-        activeMoveSpeed = dashSpeed;                                          // 속도변경
-        dashCoolCounter = dashCooldown;                                       // 쿨타임 작동
+        dashInputX           = direction;                          
+        transform.localScale = new Vector2(direction, 1f);
+        activeMoveSpeed      = dashSpeed;                                     // 속도변경
+        dashCoolCounter      = dashCooldown;                                  // 쿨타임 작동
+        animator.SetTrigger("Dash");                                     // 속도 변경후 애니메이션 재생 ☆
         PlayerHpController.instance.MakeInvincible(dashTime);                 // 대쉬 애니메이션 재생 길이만큼 무적시간 보내기
     }
     
@@ -258,8 +247,13 @@ public class PlayerController : MonoBehaviour
         for (var i = 0; i < hit.Length; ++i)
         {
             // 적
-            if(hit[i].GetComponent<EnemyController>() == true)
-                hit[i].GetComponent<EnemyController>().DamageEnemy(damageToGive);
+            if (hit[i].GetComponent<EnemyController>() == true)
+            {
+                if(hit[i].GetComponent<EnemyController>().weaknessState == true)
+                    hit[i].GetComponent<EnemyController>().DamageEnemy(damageToGive * 10);
+                else
+                    hit[i].GetComponent<EnemyController>().DamageEnemy(damageToGive);
+            }
             
             // 오브젝트
             if(hit[i].GetComponent<Breakables>() == true)
@@ -268,6 +262,14 @@ public class PlayerController : MonoBehaviour
             // 보스 body 평타판정 스크립트가 들어있으면
             if(hit[i].GetComponent<BossBodytakeDamage>() == true)
                 hit[i].GetComponent<BossBodytakeDamage>().TakeDamage(damageToGive);
+            
+            // 보스 body 평타판정 스크립트가 들어있으면
+            if (hit[i].GetComponent<EnemyBullet>() == true)
+            {
+                Instantiate(PlayerParing.instance.boomPrefabs, hit[i].transform.position, Quaternion.identity);
+                Destroy(hit[i].gameObject);
+                UIController.instance.gageSlider.value += 0.1f;
+            }
         }
     }
 
@@ -299,11 +301,13 @@ public class PlayerController : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Player_Dash"))          
         {
             rollState = false;
-            theRB.velocity = new Vector2(dashInputX * activeMoveSpeed, theRB.velocity.y);
+            theRB.gravityScale = originGavityScale * 0.5f;
+            theRB.velocity = new Vector2(dashInputX * activeMoveSpeed, theRB.velocity.y); // 이동
         }
         else                                     
         {
             rollState = true;
+            theRB.gravityScale = originGavityScale;
             activeMoveSpeed = moveSpeed;
         }
     
@@ -322,11 +326,10 @@ public class PlayerController : MonoBehaviour
             skillState = true;              
         }
         
-        
         // 타격
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Player_TakeHit"))
         {
-            takeHitState = false;             
+            //takeHitState = false;             
         }
         else
 		{

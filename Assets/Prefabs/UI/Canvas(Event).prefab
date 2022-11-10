@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 46539228341747508}
   - component: {fileID: 46539228341747507}
   - component: {fileID: 46539228341747506}
+  - component: {fileID: 6573771721158900047}
   - component: {fileID: 4403687710544026278}
   m_Layer: 0
   m_Name: Canvas(Event)
@@ -240,6 +241,20 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &6573771721158900047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46539228341747505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e16ef308125b747863d11fe7956097, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoEventState: 0
+  startDelay: 0
 --- !u!114 &4403687710544026278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,15 +268,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventState: 1
-  startCameraMovePoint: {fileID: 4340547793155874850}
+  bossRoomState: 0
+  startCameraMovePoint: {fileID: 0}
   backGround: {fileID: 0}
   fadeToTriggerTime: 3
   playerToMovePointTime: 6
   movePointToPlayer: 9
   explanationBorad: {fileID: 5866356724821527063}
   explanationText: {fileID: 1623377187}
-  explanation: []
-  explanationString: []
+  explanation:
+  - {fileID: 0}
+  explanationString:
+  - 
 --- !u!1 &982349199564750415
 GameObject:
   m_ObjectHideFlags: 0

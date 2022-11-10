@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 using Slider = UnityEngine.UI.Slider;
 
@@ -28,6 +27,8 @@ public class UIController : MonoBehaviour
 	public bool		   deathState;
 
 	public GameObject bossSlider;										// 보스 페널
+
+	public Slider gageSlider;
 
 	private void Awake()
 	{

@@ -8,7 +8,8 @@ public class NpcTypingEffect : MonoBehaviour
 	public GameObject message;                                  // 안내 메세지 
 	public GameObject bodySR;
 	public GameObject focusPoint;								// 포커스 포인트
-	
+
+	public Canvas canvas;
 	public TextMeshProUGUI NPCTxet;                        
 	public List<string> aloneTalk	 = new List<string>();
 	public List<string> togetherTalk = new List<string>();
@@ -91,25 +92,36 @@ public class NpcTypingEffect : MonoBehaviour
 	
 	private IEnumerator AloneCoroutine()
 	{
-		while (true)
+		if (aloneTalk.Count != 0)
 		{
-			listRandNmu = Random.Range(0, aloneTalk.Count);                  // 출력 문자열 선택(0 ~ 3-1)
-
-			for (int j = 0; j < aloneTalk[listRandNmu].Length + 1; j++)
-			{
-				NPCTxet.text = aloneTalk[listRandNmu].Substring(0, j);        // 출력 문자열 수 증가
-				yield return new WaitForSeconds(0.15f);
-			}
-			yield return new WaitForSeconds(3.0f);
+			canvas.gameObject.SetActive(true);
+			
+			while (true)
+            {
+            	listRandNmu = Random.Range(0, aloneTalk.Count);                  // 출력 문자열 선택(0 ~ 3-1)
+          
+            	for (int j = 0; j < aloneTalk[listRandNmu].Length + 1; j++)
+            	{
+            		NPCTxet.text = aloneTalk[listRandNmu].Substring(0, j);        // 출력 문자열 수 증가
+            		yield return new WaitForSeconds(0.15f);
+            	}
+            	yield return new WaitForSeconds(3.0f);
+            }
 		}
+		
 	}
 
 	private IEnumerator TogatherCoroutines()
 	{
-		for (int j = 0; j < togetherTalk[togetherTalkNum].Length + 1; j++)
+		if(togetherTalk.Count != 0)
 		{
-			NPCTxet.text = togetherTalk[togetherTalkNum].Substring(0, j);
-			yield return new WaitForSeconds(0.1f);
+			canvas.gameObject.SetActive(true);
+			
+			for (int j = 0; j < togetherTalk[togetherTalkNum].Length + 1; j++)
+			{
+				NPCTxet.text = togetherTalk[togetherTalkNum].Substring(0, j);
+				yield return new WaitForSeconds(0.1f);
+			}
 		}
 	}
 

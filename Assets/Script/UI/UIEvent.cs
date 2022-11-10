@@ -6,7 +6,7 @@ using UnityEngine;
 public class UIEvent : MonoBehaviour
 {
 	public static UIEvent instance;
-
+	
 	[HideInInspector]
 	public bool        eventState = true;		   // 이벤트 중 false
 	public bool        bossRoomState;			   // boss
@@ -117,10 +117,6 @@ public class UIEvent : MonoBehaviour
 			{
 				explanationNum++;										  // 번호 증가★
 			}
-
-			PlayerController.instance.autoMoveRight = false;
-			PlayerController.instance.autoMoveLeft  = false;
-			
 		}
 		// cameraWaitingtimeCount * 3.0f 넘으면
 		else if (cameraWaitingtimeCount >= playerToMovePointTime)

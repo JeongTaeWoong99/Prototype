@@ -72,8 +72,8 @@ public class PlayerParing : MonoBehaviour
             currentTime +=  Time.deltaTime * zoomAndTimeSlowSpeed;      // 줌과 타임스케일 0까지(Time.deltaTime이므로, 많이 증가하다가, 타임스케일 조정에 따라 같이 증가값이 적어짐)
             percent      =  currentTime / percendFadeTime;              // 0에서 1까지 올라감.
 
-            //카메라 스케일 조정(1.8 -> 1.4)
-            CameraController.instance.mainCam.orthographicSize = Mathf.Lerp(1.8f, 1.4f, percent);
+            //카메라 스케일 조정(2.2 -> 1.8)
+            CameraController.instance.mainCam.orthographicSize = Mathf.Lerp(2.2f, 1.8f, percent);
 
             // 타임스케일 조정(0.3 -> 0.0)
             Time.timeScale = Mathf.Lerp(0.3f, 0.0f, percent);
@@ -290,8 +290,9 @@ public class PlayerParing : MonoBehaviour
             // 카메라 원래대로 복귀
             CameraController.instance.focusNPC = null;
             CameraController.instance.focusIn  = false;
-            CameraController.instance.GetComponent<Camera>().orthographicSize = 1.8f;
-            CameraController.instance.transform.position = new Vector3(CameraController.instance.target.transform.position.x,CameraController.instance.seenWoladY,CameraController.instance.transform.position.z);
+            CameraController.instance.GetComponent<Camera>().orthographicSize = 2.2f;
+            CameraController.instance.transform.position
+                = new Vector3(CameraController.instance.target.transform.position.x,CameraController.instance.target.transform.position.y,CameraController.instance.transform.position.z);
             createPoint.transform.position = originLineCreateMovePoint;  // 초기 위치 복귀
             yield return new WaitForSecondsRealtime(1.0f);           // 멈췄다가 터지는 연출
             Time.timeScale = 1.0f;
@@ -408,8 +409,9 @@ public class PlayerParing : MonoBehaviour
     {
         finalList.Clear();                              // 리스트 클리어
         //카메라 이동
-        CameraController.instance.mainCam.orthographicSize = 1.8f;
-        CameraController.instance.transform.position = new Vector3(CameraController.instance.target.transform.position.x,CameraController.instance.seenWoladY,CameraController.instance.transform.position.z); //☆
+        CameraController.instance.mainCam.orthographicSize = 2.2f;
+        CameraController.instance.transform.position 
+            = new Vector3(CameraController.instance.target.transform.position.x,CameraController.instance.target.transform.position.y,CameraController.instance.transform.position.z); //☆
         CameraController.instance.focusNPC = null;
         CameraController.instance.focusIn  = false;
         

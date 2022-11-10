@@ -11,6 +11,8 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Script/UI/UIAutoSystem.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.render-pipelines.core@12.1.7/Runtime/Debugging/DebugUpdater.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.shadergraph@12.1.7/Editor/Data/Graphs/SerializableTexture.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -76,6 +78,11 @@
       <workItem from="1667290329091" duration="856000" />
       <workItem from="1667305808447" duration="4009000" />
       <workItem from="1667309952970" duration="4623000" />
+      <workItem from="1667383212452" duration="11473000" />
+      <workItem from="1667459337760" duration="840000" />
+      <workItem from="1667463048938" duration="7309000" />
+      <workItem from="1667809898928" duration="6608000" />
+      <workItem from="1667979502991" duration="20929000" />
     </task>
     <servers />
   </component>

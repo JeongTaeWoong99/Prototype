@@ -171,7 +171,7 @@ public class EnemyBullet : MonoBehaviour
     // 사망시 모든 투사체들 터지게
     private void BulletEliminate()
     {
-	    // 여추적 하다가 대상 사망
+	    // 역추적 하다가 대상 사망
 	    if (currentTarget == false)
 	    {
 		    Instantiate(boomEffectToEnemy, gameObject.transform.position, quaternion.identity);
