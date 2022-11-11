@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour
 	public  float      focusSpeed;   // 포커스 스피드
 	public  GameObject focusNPC;     // 포커스 할 NPC
 
+	[HideInInspector]
 	public  bool       focusIn;
 
 	private void Awake()	
@@ -35,7 +36,7 @@ public class CameraController : MonoBehaviour
 					                          moveSpeed * Time.deltaTime);
 		}
 		// focusNPC가 true이고, focusIn이 true 일 때
-		else if (focusIn == true)
+		else if (focusIn)
 		{
 			// NPC 포커스
 			if (CompareTag("NPC"))

@@ -5,18 +5,21 @@ using UnityEngine.SceneManagement;
 public class EventPoint : MonoBehaviour
 {
 	// 설명
-	public bool       explnationSet;
-	
+	public bool       explnationBool; 
+ 	
 	// 생성
-	public GameObject creatObjectSet;
+	public bool       creatObjectBool;
+	public GameObject creatObject;
 
 	// 다음씬
-	public bool       nextSeenSet;
-	public string     nextSeenName;
+	public bool       nextSeenBool;   
+	public string     nextSeenName;  
 	public float      waitToLoad;                               // 씬 전환 시간
 	
 	// 다음 이벤트 상황 완료
-	public bool       autoEventCompleteSet;
+	public bool         autoEventBool;
+	public GameObject[] eventObjectDistroy;        // 삭제
+	
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
@@ -24,33 +27,32 @@ public class EventPoint : MonoBehaviour
 		if (other.CompareTag("Player"))
 		{
 			// 체크가 되어 있다면 -> 설명생성
-			if (explnationSet)
+			if (explnationBool)
 			{
 				UIEvent.instance.Explanation();
 				Destroy(gameObject);
 			}
 
 			// 오브젝트가 들어가 있으면 -> 오브젝트 생성
-			if (creatObjectSet)
+			if (creatObjectBool)
 			{
-				creatObjectSet.gameObject.SetActive(true);
+				creatObject.gameObject.SetActive(true);
 				Destroy(gameObject);
 			}
 
 			// 체크가 되어 있다면 -> 다음씬 넘어감
-			if (nextSeenSet)
+			if (nextSeenBool)
 			{
 				StartCoroutine(LevelEnd());
 			}
 			
-			// 해당 위치로 이동 -> 테스트1번
-			if (autoEventCompleteSet)
+			//  테스트
+			if(autoEventBool)
 			{
 				UIAutoSystem.instance.autoEventState = false;																	// 다시 이벤트 이어서
-				//PlayerController.instance.theRB.velocity = new Vector2(PlayerController.instance.theRB.velocity.x, PlayerController.instance.theRB.velocity.y);		// 대쉬로 나가는거 방지
-				PlayerController.instance.theRB.gravityScale = PlayerController.instance.originGavityScale;                     // 대쉬중 부딪혔을 때, 멀리나가는 문제 !! ☆★
-				
-				UIAutoSystem.instance.autoAtion[UIAutoSystem.instance.currtAtionNum-1].activeObject.SetActive(false);			// currtAtionNum++ 됐기 때문에, -1한 값을 꺼준다.
+				// 삭제
+				for(int i = 0;i<eventObjectDistroy.Length;i++)
+					Destroy(eventObjectDistroy[i]);
 			}
 			
 			

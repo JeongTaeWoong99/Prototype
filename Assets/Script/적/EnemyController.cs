@@ -42,7 +42,10 @@ public class EnemyController : MonoBehaviour
 	[HideInInspector]
 	public bool         attackState   = false;
 
-	public bool weaknessState = false;
+	public bool weaknessState;					// true 취약상태 false 기본상태
+
+	public bool tutoBotBool;					// true 훈련용봇
+	
 
 	
 	
@@ -56,13 +59,18 @@ public class EnemyController : MonoBehaviour
 	private void Start()
 	{
 		pauseCounter = Random.Range(pauseLength * 0.75f, pauseLength * 1.25f);	// 초기 퍼즈카운터
-		if (damagePoint == true)		// Knight 공격거리
+		
+		// 훈련용 봇이 아니면
+		if (tutoBotBool == false)
 		{
-			attackDistance = Random.Range(0.3f, 0.8f);
-		}
-		else if(shootPoint == true)	// Archer 공격거리
-		{
-			attackDistance = Random.Range(2f, 3f);
+			if (damagePoint == true)		// Knight 공격거리
+            {
+            	attackDistance = Random.Range(0.3f, 0.8f);
+            }
+            else if(shootPoint == true)	// Archer 공격거리
+            {
+            	attackDistance = Random.Range(2f, 3f);
+            }
 		}
 		
 		currentHealth		  = maxHealth;
@@ -178,7 +186,16 @@ public class EnemyController : MonoBehaviour
 			Destroy(gameObject);
 			var transform1 = transform;
 			deathAnim.transform.localScale = transform1.localScale;
-			Instantiate(deathAnim,transform1.position, Quaternion.identity);
+			Instantiate(deathAnim, transform1.position, Quaternion.identity);
+
+			// 만약 훈련용봇이면
+			if (tutoBotBool)
+			{
+				UIAutoSystem.instance.autoEventState = false;																	// 다시 이벤트 이어서
+				PlayerController.instance.theRB.gravityScale = PlayerController.instance.originGavityScale;                     // 대쉬중 부딪혔을 때, 멀리나가는 문제 !! ☆★
+				UIAutoSystem.instance.autoAtion[UIAutoSystem.instance.currtAtionNum-1].objectE.activeObject.SetActive(false);			// currtAtionNum++ 됐기 때문에, -1한 값을 꺼준다.
+			}
+			
 		}
 
 		healthSlider.value = currentHealth;

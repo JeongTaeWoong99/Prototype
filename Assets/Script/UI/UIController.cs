@@ -12,7 +12,7 @@ public class UIController : MonoBehaviour
     public Image fadeScreen;             
     public float fadeSpeed;
     [HideInInspector]
-    public bool  fadeOutBlack;
+    public bool  fadeOutBlack = true;
     [HideInInspector]
     public bool  fadeToBlack;
 
@@ -38,8 +38,6 @@ public class UIController : MonoBehaviour
 	private void Start()
 	{
 		UI[currentNum].color = new Color(1f, 0f, 0f, 1f);
-		
-		 fadeOutBlack = true;    // 게임 시작시 true
 	}
 	
 	private void Update()
@@ -54,6 +52,7 @@ public class UIController : MonoBehaviour
 
 	private void Fade()
 	{
+		// storyTalkEndState이 끝나있어야 재생가능
 		if (UIStoryTalk.instance.storyTalkEndState == true)
 		{
 			// fadeOutBlack가 true이면, 검정색 화면을 점점 밝게 함
@@ -62,8 +61,9 @@ public class UIController : MonoBehaviour
 				fadeScreen.color = new Color(fadeScreen.color.r, fadeScreen.color.g, fadeScreen.color.b,
 					Mathf.MoveTowards(fadeScreen.color.a,0.0f,fadeSpeed * Time.deltaTime));
 				// 화면이 다 밝아지면, fadeOutBlack 다시 false로 설정 
-				if (fadeScreen.color.a == 0.0f)
+				if (fadeScreen.color.a < 0.05f)
 				{
+					fadeScreen.color = new Color(fadeScreen.color.r, fadeScreen.color.g, fadeScreen.color.b,0f);
 					fadeOutBlack = false;
 				}
 			}
@@ -74,8 +74,9 @@ public class UIController : MonoBehaviour
 				fadeScreen.color = new Color(fadeScreen.color.r, fadeScreen.color.g, fadeScreen.color.b,
 					Mathf.MoveTowards(fadeScreen.color.a, 1.0f, fadeSpeed * Time.deltaTime));
 				// 화면이 다 어두워지면, fadeToBlack 다시 false로 설정 
-				if (fadeScreen.color.a == 1.0f)
+				if (fadeScreen.color.a > 0.95f)
 				{
+					fadeScreen.color = new Color(fadeScreen.color.r, fadeScreen.color.g, fadeScreen.color.b,1f);
 					fadeToBlack = false;
 				}
 			}

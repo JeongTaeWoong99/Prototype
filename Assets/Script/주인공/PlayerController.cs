@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public SpriteRenderer bodySR;   
     [HideInInspector]
     public Animator       animator;
-    public Animator       bladeAnimator;
+    //public Animator       bladeAnimator;
     
     public GameObject     deathPrefabs;                 // 사망 프리팹         
 
@@ -56,6 +56,13 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public bool  skillState;          // 스킬 사용 중 false // 사용 중 x true     
 
+    [HideInInspector] 
+    public bool rightKeyLock;
+    [HideInInspector] 
+    public bool leftKeyLock;
+    [HideInInspector] 
+    public bool jumpKeyLock;
+    
     private void Awake()
     {
         instance = this;
@@ -65,7 +72,7 @@ public class PlayerController : MonoBehaviour
         animator          = GetComponent<Animator>();
         bodySR            = GetComponent<SpriteRenderer>();
 
-        activeMoveSpeed = moveSpeed;
+        activeMoveSpeed   = moveSpeed;
         originGavityScale = theRB.gravityScale;
 
         // 클립을 모두 받아와서, 이름별로 총 재생길이 저장
@@ -90,7 +97,14 @@ public class PlayerController : MonoBehaviour
             UIStoryTalk.instance.storyTalkEndState == true && UIEvent.instance.eventState == true && UIAutoSystem.instance.autoEventState == true)
         {
             //이동
-            inputX = Input.GetAxisRaw("Horizontal");                                    // right left +1 -1
+            inputX = Input.GetAxisRaw("Horizontal"); // right left +1 -1
+            
+            // 키잠금
+            if(inputX ==  1 && rightKeyLock)
+                 inputX = 0;
+            else if (inputX == -1 && leftKeyLock)
+                 inputX = 0;
+            
             theRB.velocity = new Vector2(inputX * activeMoveSpeed, theRB.velocity.y); // 이동
 
             // 좌우반전
@@ -110,7 +124,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // 점프
-            if (Input.GetKeyDown("up"))
+            if (Input.GetKeyDown("up") && !jumpKeyLock)
             {
                 Jump();
             }
@@ -184,7 +198,14 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        //theRB.AddForce(transform.right * 50f);
+        // 미끄러지면서 공격하는 것 방지
+        theRB.velocity = new Vector2(0f, theRB.velocity.y);						// 이동멈춤(E누르고 나가는 경우 방지)
+        
+        // 공격시 앞으로 살짝 나감
+        if(transform.localScale.x == 1)
+            theRB.AddForce(transform.right * 50f);
+        else
+            theRB.AddForce(-transform.right * 50f);
         
         //currentAttack++;
         

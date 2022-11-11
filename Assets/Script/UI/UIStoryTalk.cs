@@ -41,8 +41,46 @@ public class UIStoryTalk : MonoBehaviour
 		}
 	}
 
+	
+	// 0번 원칙
+	private IEnumerator ZeroPrinciple()
+	{
+		foreach (char c in storyTalk[talkNum])
+		{
+			UITxet.text += c;
+			yield return new WaitForSeconds(0.1f);
+		}
+		yield return new WaitForSeconds(2.0f);
+		//  화면 지지직 효과
+		//
+		yield return new WaitForSeconds(2.0f);
+		UITxet.text = "";
+		talkNum++;
+
+
+	}
+
 	private IEnumerator StoryCoroutine()
 	{
+		foreach (char c in storyTalk[talkNum])
+		{
+			UITxet.text += c;
+			yield return new WaitForSeconds(0.1f);
+		}
+		yield return new WaitForSeconds(2.0f);
+		
+		//  화면 지지직 효과 
+		//  
+		//
+		
+		yield return new WaitForSeconds(2.0f);
+		UITxet.text = "";
+		talkNum++;
+
+		// 초록색으로 색변경
+		//
+		//
+		
 		while (true)
 		{
 			foreach (char c in storyTalk[talkNum])
@@ -65,28 +103,5 @@ public class UIStoryTalk : MonoBehaviour
 			}
 		}
 	}
-	
-	// private IEnumerator StoryCoroutine()
-	// {
-	// 	while (true)
-	// 	{
-	// 		for (int j = 0; j < storyTalk[talkNum].Length + 1; j++)
-	// 		{
-	// 			UITxet.text = storyTalk[talkNum].Substring(0, j);        // 출력 문자열 수 증가
-	// 			yield return new WaitForSeconds(0.1f);
-	// 		}
-	// 		talkNum++;
-	// 		yield return new WaitForSeconds(2.0f);
-	//
-	// 		// 스토리 종료
-	// 		if (talkNum == storyTalk.Count)
-	// 		{
-	// 			storyTalkEndState = true;
-	// 			UITxet.gameObject.SetActive(false);      // 텍스트 가리기
-	// 			StopCoroutine(StoryCoroutine());
-	// 			break;
-	// 		}
-	// 	}
-	// }
 
 }
