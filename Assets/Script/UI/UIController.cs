@@ -12,12 +12,13 @@ public class UIController : MonoBehaviour
     public Image fadeScreen;             
     public float fadeSpeed;
     [HideInInspector]
-    public bool  fadeOutBlack = true;
+    public bool fadeOutBlack;
     [HideInInspector]
     public bool  fadeToBlack;
 
-    public TextMeshProUGUI healthText;      // UI의 text      참조      
+    public TextMeshProUGUI healthText;      // 체력테스트     
     public Slider          healthSlider;    // UI의 Slider    참조
+	public Slider          gageSlider;
 
 	private int   currentNum = 0;                                       // 현재 선택된 넘버
 
@@ -27,8 +28,8 @@ public class UIController : MonoBehaviour
 	public bool		   deathState;
 
 	public GameObject bossSlider;										// 보스 페널
-
-	public Slider gageSlider;
+	
+	
 
 	private void Awake()
 	{
@@ -53,7 +54,7 @@ public class UIController : MonoBehaviour
 	private void Fade()
 	{
 		// storyTalkEndState이 끝나있어야 재생가능
-		if (UIStoryTalk.instance.storyTalkEndState == true)
+		if (UIStoryTalk.instance.storyTalkEndState)
 		{
 			// fadeOutBlack가 true이면, 검정색 화면을 점점 밝게 함
 			if (fadeOutBlack)
@@ -100,7 +101,7 @@ public class UIController : MonoBehaviour
 
 	private void Death()
 	{
-		if (deathState == true)
+		if (deathState)
 		{
 			var clamp = Mathf.Clamp(currentNum, 0, 2);
 			if (Input.GetKeyDown(KeyCode.DownArrow))

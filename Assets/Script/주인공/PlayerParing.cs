@@ -7,6 +7,11 @@ public class PlayerParing : MonoBehaviour
 {
     public static PlayerParing instance;
     
+    //[HideInInspector] 
+    public bool prmMode;                           // PRM 모드
+    //[HideInInspector]
+    public bool traceMode;                         // Trace 모드
+    
 	[HideInInspector]
 	public  bool      paringState = true;          // false 사용 중
 	private float     percendFadeTime = 0.1f;      // 퍼센트 감속 값 조정
@@ -36,6 +41,13 @@ public class PlayerParing : MonoBehaviour
 
     public GameObject  pivot;
     private GameObject temp;
+
+    private LayerMask basicLayer = ~(1 << 3);       // 실루엣 레이어 제외
+
+    
+    
+    
+    
     
     class SortData
     {
@@ -46,10 +58,11 @@ public class PlayerParing : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        CameraController.instance.mainCam.cullingMask = basicLayer;                 // 게임 시작시 카메라 설정은 basic으로
     }
 	public void Paring()
     {
-        if (paringState == true)
+        if (paringState)
         {
             CameraController.instance.focusNPC = cameraMovePoint;
             CameraController.instance.focusIn  = true;													// focusIn true
@@ -104,12 +117,16 @@ public class PlayerParing : MonoBehaviour
             percent      = currentTime / percendFadeTime;                 // 0에서 1까지 올라감.
 
             float scanScale;
-            scanScale = Mathf.Lerp(0.0f, 2f, percent);           // 0 -> 2
+            scanScale = Mathf.Lerp(0.0f, 2.5f, percent);           // 0 -> 2
             scanIns.transform.localScale = new Vector2(scanScale, scanScale);
             
-            if (scanScale > 1.99f)
+            if (scanScale > 2.49f)
             {
-                StartCoroutine(Trace());
+                // 추적모드 // PRM모드
+                if(traceMode)
+                    StartCoroutine(Trace());
+                else if(prmMode)
+                    StartCoroutine(PRM());
                 yield break;
             }
             
@@ -117,6 +134,23 @@ public class PlayerParing : MonoBehaviour
         }
     }
 
+    // 잠재 위험 측정(Potential risk measurement)
+    private IEnumerator PRM()
+    {
+        yield return new WaitForSecondsRealtime(2f);
+        CameraController.instance.mainCam.cullingMask = LayerMask.GetMask("Silhouette");    // 실루엣 화면으로
+        
+        yield return new WaitForSecondsRealtime(2f);
+        GameObject singleUse = GameObject.FindWithTag("SingleUse");                                       // 스캔 오브젝트 삭제
+        Destroy(singleUse);
+
+        CameraController.instance.mainCam.cullingMask = basicLayer;                                    // 원래 화면으로
+        ParingEnd();                                                                                       // 패링끝
+    }
+    
+    
+    
+    // 추적모드 
     private IEnumerator Trace()
     {
         var originLineCreateMovePoint = createPoint.transform.position; // 스킬사용 했을 때, 초기 위치 저장
@@ -355,7 +389,6 @@ public class PlayerParing : MonoBehaviour
             Destroy(singleUse);
             ParingEnd();
         }
-        yield break;
     }
 
     // 범위 체크 및 발동

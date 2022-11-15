@@ -80,12 +80,11 @@ public class PlayerHpController : MonoBehaviour
                 UIController.instance.deathState = true;                                                     // 사망상태 true
                 UIController.instance.deathScreen.SetActive(true);                                           // 사망상태 true
 
-                // 사망 프리팹 생성
-                // 1회 생성 후 null 넣어서 중복생성 방지
+                // 사망
                 if (PlayerController.instance.deathPrefabs)
                 {
-                    Instantiate(PlayerController.instance.deathPrefabs, transform.position, Quaternion.identity);   
-                    PlayerController.instance.deathPrefabs = null;
+                    Instantiate(PlayerController.instance.deathPrefabs, transform.position, Quaternion.identity);
+                    PlayerController.instance.deathPrefabs = null;                                                                         // 1회 생성 후 null 넣어서 중복생성 방지
                     PlayerController.instance.gameObject.SetActive(false);                                                                 // 플레이어 비활성화
                 }
             }

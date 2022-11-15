@@ -3167,6 +3167,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas(UI)
       objectReference: {fileID: 0}
+    - target: {fileID: 500471993191709564, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
+      propertyPath: fadeOutBlack
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 500471993191709567, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3259,6 +3263,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3812070382117715215, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
+      propertyPath: storyTalk.Array.data[1]
+      value: 1.
+      objectReference: {fileID: 0}
+    - target: {fileID: 3812070382117715215, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
+      propertyPath: storyTalk.Array.data[2]
+      value: 2.
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
 --- !u!1001 &6664219823110919825
@@ -3268,6 +3280,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2140218657, guid: 9be26e07fe82c4a4a925985d6291034a, type: 3}
+      propertyPath: traceMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2140218657, guid: 9be26e07fe82c4a4a925985d6291034a, type: 3}
+      propertyPath: scanSclaeSpeed
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2140218657, guid: 9be26e07fe82c4a4a925985d6291034a, type: 3}
+      propertyPath: zoomAndTimeSlowSpeed
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6664219822711538880, guid: 9be26e07fe82c4a4a925985d6291034a, type: 3}
       propertyPath: m_Name
       value: Player

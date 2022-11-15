@@ -93,19 +93,16 @@ public class PlayerController : MonoBehaviour
         // 애니메이션 상태체크
         StateCheckTimer();
         
-        if (attackState == true && rollState == true && takeHitState == true && skillState  == true && PlayerParing.instance.paringState == true &&
-            UIStoryTalk.instance.storyTalkEndState == true && UIEvent.instance.eventState == true && UIAutoSystem.instance.autoEventState == true)
+        if (attackState && rollState && takeHitState && skillState && PlayerParing.instance.paringState &&
+            UIStoryTalk.instance.storyTalkEndState && UIEvent.instance.eventState && UIAutoSystem.instance.autoEventState && !UIInventory.instance.puaseState)
         {
             //이동
-            inputX = Input.GetAxisRaw("Horizontal"); // right left +1 -1
-            
-            // 키잠금
-            if(inputX ==  1 && rightKeyLock)
+            inputX = Input.GetAxisRaw("Horizontal");                                    // right left +1 -1
+            if(inputX ==  1 && rightKeyLock)                                            // 키잠금
                  inputX = 0;
             else if (inputX == -1 && leftKeyLock)
                  inputX = 0;
-            
-            theRB.velocity = new Vector2(inputX * activeMoveSpeed, theRB.velocity.y); // 이동
+            theRB.velocity = new Vector2(inputX * activeMoveSpeed, theRB.velocity.y); // 최종이동
 
             // 좌우반전
             if (inputX > 0)
@@ -145,7 +142,7 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("Walking", false);
             }
             
-            // 집중모드
+            // 패링모드
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 PlayerParing.instance.Paring();

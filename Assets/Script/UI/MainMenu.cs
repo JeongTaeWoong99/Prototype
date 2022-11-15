@@ -20,13 +20,13 @@ public class MainMenu : MonoBehaviour
 	{
 		if (continueBorad.gameObject.activeInHierarchy == false)
 		{
-			var clamp = Mathf.Clamp(currentNum, 0, 5);
+			Mathf.Clamp(currentNum, 0, 5);
 			if (Input.GetKeyDown(KeyCode.DownArrow))
 			{
 				if (currentNum < 4)
 				{
 					UI[currentNum].color = new Color(1f, 1f, 1f, 1f);
-					++currentNum;
+					currentNum++;
 					UI[currentNum].color = new Color(1f, 0f, 0f, 1f);
 				}
 			}
