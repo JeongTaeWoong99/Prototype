@@ -253,7 +253,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoEventState: 0
-  startDelay: 0
   autoAtion: []
   currtAtionNum: 0
 --- !u!114 &4403687710544026278

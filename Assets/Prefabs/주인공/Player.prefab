@@ -374,13 +374,13 @@ MonoBehaviour:
   theRB: {fileID: 6664219822711538884}
   bodySR: {fileID: 6664219822711538883}
   animator: {fileID: 6664219822711538888}
-  bladeAnimator: {fileID: 4424170597965868474}
   deathPrefabs: {fileID: 7926985964551502917, guid: 76f92cb61ae80b7479f6e2dc62c6f8e3, type: 3}
   rollState: 0
   inputX: 0
   moveSpeed: 3
-  dashSpeed: 8
+  dashSpeed: 6
   dashCooldown: 1
+  originGavityScale: 0
   jumpForce: 4
   groundLayer:
     serializedVersion: 2
@@ -394,8 +394,9 @@ MonoBehaviour:
   damageToGive: 100
   takeHitState: 0
   skillState: 0
-  autoMoveRight: 0
-  autoMoveLeft: 0
+  rightKeyLock: 0
+  leftKeyLock: 0
+  jumpKeyLock: 0
 --- !u!114 &6664219822711538890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -447,6 +448,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d41e9380fa9ba8e49b04e7566195745e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prmMode: 1
+  traceMode: 0
   paringState: 1
   cameraMovePoint: {fileID: 3382283985218832014}
   scanPrefabs: {fileID: 3556007026275753257, guid: f265d56bf55dd2a489621c5f5114f184, type: 3}
@@ -458,8 +461,8 @@ MonoBehaviour:
   redCirclePrefabs: {fileID: 5824670795371433373, guid: 36a7dbf69367b1b4694579b61aabdd6a, type: 3}
   timeCircPrefabs: {fileID: 125559824923172159, guid: 66aa8be7c55a7ee408bc941f8ab3c766, type: 3}
   boomPrefabs: {fileID: 100000, guid: a35e1f38ece228149b19b7299bdea4da, type: 3}
-  zoomAndTimeSlowSpeed: 2
-  scanSclaeSpeed: 2
+  zoomAndTimeSlowSpeed: 0.5
+  scanSclaeSpeed: 0.25
   pivot: {fileID: 1732392493}
 --- !u!114 &410128989
 MonoBehaviour:

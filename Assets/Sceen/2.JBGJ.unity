@@ -1193,7 +1193,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 910264854}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3159,17 +3159,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 751782139, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 500471993191709563, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
       propertyPath: m_Name
       value: Canvas(UI)
-      objectReference: {fileID: 0}
-    - target: {fileID: 500471993191709564, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
-      propertyPath: fadeOutBlack
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 500471993191709567, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
       propertyPath: m_Pivot.x
@@ -3255,22 +3247,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 500471993555851806, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 500471993555851806, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3812070382117715215, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
-      propertyPath: storyTalk.Array.data[1]
-      value: 1.
-      objectReference: {fileID: 0}
-    - target: {fileID: 3812070382117715215, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
-      propertyPath: storyTalk.Array.data[2]
-      value: 2.
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 877e8f02ac3320b4ca965a618c84373f, type: 3}
 --- !u!1001 &6664219823110919825
@@ -3280,6 +3256,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2140218657, guid: 9be26e07fe82c4a4a925985d6291034a, type: 3}
+      propertyPath: prmMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2140218657, guid: 9be26e07fe82c4a4a925985d6291034a, type: 3}
       propertyPath: traceMode
       value: 1

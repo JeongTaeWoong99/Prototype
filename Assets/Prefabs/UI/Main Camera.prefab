@@ -68,7 +68,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2147483647
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -111,7 +111,6 @@ MonoBehaviour:
   mainCam: {fileID: 0}
   moveSpeed: 30
   target: {fileID: 0}
-  seenWoladY: 0
   focusSpeed: 1
   focusNPC: {fileID: 0}
   focusIn: 0
