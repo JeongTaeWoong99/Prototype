@@ -2318,16 +2318,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puaseState: 0
   puasePanel: {fileID: 288448029}
-  inventoryList:
-  - {fileID: 188988586}
-  - {fileID: 2138965051}
-  - {fileID: 959406441}
-  - {fileID: 331314373}
+  focusRed: {fileID: 0}
   invenComponent:
-  - {fileID: 1420470192}
-  - {fileID: 145661970}
-  - {fileID: 1025237574}
-  - {fileID: 544179961}
+  - text: {fileID: 0}
+    fullElement: {fileID: 0}
+    inerLine: []
+  - text: {fileID: 0}
+    fullElement: {fileID: 0}
+    inerLine: []
+  - text: {fileID: 0}
+    fullElement: {fileID: 0}
+    inerLine: []
+  - text: {fileID: 0}
+    fullElement: {fileID: 0}
+    inerLine: []
 --- !u!1 &500471993282518346
 GameObject:
   m_ObjectHideFlags: 0

@@ -145,7 +145,7 @@ public class PlayerParing : MonoBehaviour
         Destroy(singleUse);
 
         CameraController.instance.mainCam.cullingMask = basicLayer;                                    // 원래 화면으로
-        ParingEnd();                                                                                       // 패링끝
+        ParingEnd();                                                                                      // 패링끝
     }
     
     

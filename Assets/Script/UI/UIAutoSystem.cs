@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Net.NetworkInformation;
 using TMPro;
 using UnityEngine;
 
@@ -20,7 +19,7 @@ public class UIAutoSystem : MonoBehaviour
     private bool moveAtionEndState;
 
     private bool firstFadeEndState;
-
+    
 
     private void Awake()
     {
@@ -231,6 +230,7 @@ public class AutoAtion
     public MoveElement   moveE;
     public KeyElement    keyE;
     public FadeElement   fadeE;
+    
 }
 
 [Serializable]
