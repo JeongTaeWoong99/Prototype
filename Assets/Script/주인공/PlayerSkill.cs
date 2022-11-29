@@ -50,7 +50,7 @@ public class PlayerSkill : MonoBehaviour
         for (var i = 0; i < hit.Length; ++i)
         {
             if(hit[i].GetComponent<EnemyController>() == true)
-                hit[i].GetComponent<EnemyController>().DamageEnemy(damageToGive[keyNum]);
+                hit[i].GetComponent<EnemyController>().DamageEnemy(damageToGive[keyNum],1);
             
             if(hit[i].GetComponent<Breakables>() == true)
                 hit[i].GetComponent<Breakables>().Smash();

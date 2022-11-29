@@ -22,7 +22,7 @@ public class PlayerHpController : MonoBehaviour
         currentHealth -= penalty;
         UIController.instance.healthSlider.maxValue = maxHealth;      // 게임 시작시 healthSlider.maxValue값을 maxHealth 값으로 설정
         UIController.instance.healthSlider.value    = currentHealth;  // 게임 시작시 healthSlider.value값을 currentHealth 값으로 설정
-        UIController.instance.healthText.text       = currentHealth.ToString() + " / " + maxHealth.ToString();
+        UIController.instance.healthText.text       = currentHealth + " / " + maxHealth;
         // 게임 시작시 텍스트의 글자를 currentHealth로 바꾸고,
         // int에서 String으로 가는 것 이기 때문에 ToString() 처리를 해준다.
         // maxHealth.ToString() 도 마찬가지
@@ -34,7 +34,7 @@ public class PlayerHpController : MonoBehaviour
         // 무적시간 즉, invincibleCount가 남아 있으면, 무적시간의 남은시간을 감소시킴
         if (invincibleCount >= 0)
         {
-            invincibleCount -= Time.deltaTime;
+            invincibleCount -= Time.unscaledDeltaTime;
 
             // 투명도 정상화
             // if (invincibleCount <= 0)
@@ -56,7 +56,7 @@ public class PlayerHpController : MonoBehaviour
         if (invincibleCount <= 0)
         {
             // 모션 중 피격시 에니메이션 재생은 X
-            if(PlayerController.instance.skillState == true || PlayerParing.instance.paringState == true)     // 기본공격은 회피하도록 스킬은 무시하고 애니메이션 재생하도록
+            if(PlayerController.instance.skillState || PlayerParing.instance.paringState)     // 기본공격은 회피하도록 스킬은 무시하고 애니메이션 재생하도록
                PlayerController.instance.animator.SetTrigger("TakeHit");                                 // 히트시 애니메이션 재생 여부(안 하게되면 스킬상태 초기화 문제가 생김)
 
             invincibleCount = damageInvincibleLength;   // invincibleCount(남은시간)을 damageInvincibleLength(초기무적시간)으로 초기화
@@ -104,7 +104,6 @@ public class PlayerHpController : MonoBehaviour
         //color = new Color(color.r, color.g,color.b, 0.5f);
        // PlayerController.instance.bodySR.color = color;
     }
-    
     
     public void CameraShakeCheck()
     {

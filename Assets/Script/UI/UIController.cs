@@ -134,7 +134,6 @@ public class UIController : MonoBehaviour
 					case 1:
 						MainMenu();
 						break;
-
 				}
 			}
 		}

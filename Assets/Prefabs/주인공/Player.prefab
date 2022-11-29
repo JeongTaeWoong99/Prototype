@@ -275,7 +275,7 @@ SpriteRenderer:
   m_SortingLayerID: 838999779
   m_SortingLayer: 6
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1210974702, guid: 57727f5148a37d24fb64415526d72a41, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c2f1f40fb9704fa428cd3d01dfb85f56, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -336,8 +336,8 @@ Rigidbody2D:
   m_GravityScale: 1.5
   m_Material: {fileID: 0}
   m_Interpolate: 1
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!95 &6664219822711538888
 Animator:
@@ -374,11 +374,12 @@ MonoBehaviour:
   theRB: {fileID: 6664219822711538884}
   bodySR: {fileID: 6664219822711538883}
   animator: {fileID: 6664219822711538888}
+  bladeAnimator: {fileID: 4424170597965868474}
   deathPrefabs: {fileID: 7926985964551502917, guid: 76f92cb61ae80b7479f6e2dc62c6f8e3, type: 3}
   rollState: 0
   inputX: 0
-  moveSpeed: 3
-  dashSpeed: 6
+  moveSpeed: 5
+  dashSpeed: 50
   dashCooldown: 1
   originGavityScale: 0
   jumpForce: 4
@@ -391,7 +392,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 26112
   damagePoint: {fileID: 6664219822278812800}
-  damageToGive: 100
+  damageToGive: 500
   takeHitState: 0
   skillState: 0
   rightKeyLock: 0
@@ -461,7 +462,7 @@ MonoBehaviour:
   redCirclePrefabs: {fileID: 5824670795371433373, guid: 36a7dbf69367b1b4694579b61aabdd6a, type: 3}
   timeCircPrefabs: {fileID: 125559824923172159, guid: 66aa8be7c55a7ee408bc941f8ab3c766, type: 3}
   boomPrefabs: {fileID: 100000, guid: a35e1f38ece228149b19b7299bdea4da, type: 3}
-  zoomAndTimeSlowSpeed: 0.5
+  zoomAndTimeSlowSpeed: 1
   scanSclaeSpeed: 0.25
   pivot: {fileID: 1732392493}
 --- !u!114 &410128989
@@ -499,7 +500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4785479864742982530
 Transform:
   m_ObjectHideFlags: 0
@@ -508,7 +509,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7479410200959697640}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0.5, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

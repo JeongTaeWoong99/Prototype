@@ -700,9 +700,9 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 500
   penalty: 0
-  rangeToChasePlayer: 1
-  wanderLength: 0
-  pauseLength: 0
+  rangeToChasePlayer: 4
+  wanderLength: 0.5
+  pauseLength: 0.5
   whatIsLayer:
     serializedVersion: 2
     m_Bits: 1152
@@ -710,8 +710,8 @@ MonoBehaviour:
   deathAnim: {fileID: 1929879313613040419, guid: de3e6f9e36aa350459f208b78762fd14, type: 3}
   healthSlider: {fileID: 74215051794271512}
   attackDistance: 0.8
-  damagePoint: {fileID: 74215051729633105}
-  shootPoint: {fileID: 0}
+  knightDamagePoint: {fileID: 74215051729633105}
+  archerShootPoint: {fileID: 0}
   arrowPrefab: {fileID: 0}
   takeHitState: 0
   attackState: 0

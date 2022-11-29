@@ -21,13 +21,13 @@ public class PlayerParing : MonoBehaviour
 	public GameObject createPoint;                 // 점선/타임서클 생성 위치   
 	public GameObject LinePrefabs;                 // 라인표시 프리팹
 
-    public GameObject greenCirclePrefabs;           // 초록
-	public GameObject yellowCirclePrefabs;          // 노랑
-	public GameObject redCirclePrefabs;             // 빨강
+    public GameObject greenCirclePrefabs;          // 초록
+	public GameObject yellowCirclePrefabs;         // 노랑
+	public GameObject redCirclePrefabs;            // 빨강
     
 	private List<GameObject> finalList      = new List<GameObject>();    // 블랫추적 후 정렬된 저장리스트
     private List<GameObject> enemyFinalList = new List<GameObject>();    // 역추적할 적 리스트
-	private int  currentCheckFinalListNum = -1;                     // 현재 체크 파이널리스트 숫자
+	private int  currentCheckFinalListNum   = -1;                        // 현재 체크 파이널리스트 숫자
 	private bool keyPressState;                                     // 키상태
 	private bool rhythmGameState;                                   // 타임서클 상태
 	private List<GameObject> destroyList = new List<GameObject>();  // 격추 성공한 오브젝트
@@ -44,11 +44,6 @@ public class PlayerParing : MonoBehaviour
 
     private LayerMask basicLayer = ~(1 << 3);       // 실루엣 레이어 제외
 
-    
-    
-    
-    
-    
     class SortData
     {
         public float transformData;
@@ -58,16 +53,23 @@ public class PlayerParing : MonoBehaviour
     private void Awake()
     {
         instance = this;
+    }
+
+    private void Start()
+    {
         CameraController.instance.mainCam.cullingMask = basicLayer;                 // 게임 시작시 카메라 설정은 basic으로
     }
-	public void Paring()
+
+    public void Paring()
     {
         if (paringState)
         {
-            CameraController.instance.focusNPC = cameraMovePoint;
-            CameraController.instance.focusIn  = true;													// focusIn true
-            Time.timeScale = 0.3f;                                                                      // 즉시 감속 속도
-            Time.fixedDeltaTime = Time.timeScale * 0.005f;                                              // 부드러운 fixedUpdate를 위해 설정
+            CameraController.instance.focusPoint = cameraMovePoint;                                         // 포커스 바꾸기
+            CameraController.instance.transform.position
+                = new Vector3(cameraMovePoint.transform.position.x,cameraMovePoint.transform.position.y,CameraController.instance.transform.position.z);    // 위치이동
+            CameraController.instance.focusIn  = true;													    // focusIn true
+            Time.timeScale = 0.1f;                                                                          // 즉시 감속 속도
+            Time.fixedDeltaTime = Time.timeScale * 0.02f;                                                   // 부드러운 fixedUpdate를 위해 설정
             paringState = false;
 
             StartCoroutine(SlowMosion());
@@ -82,19 +84,23 @@ public class PlayerParing : MonoBehaviour
 
         while (percent < 1)
         {
-            currentTime +=  Time.deltaTime * zoomAndTimeSlowSpeed;      // 줌과 타임스케일 0까지(Time.deltaTime이므로, 많이 증가하다가, 타임스케일 조정에 따라 같이 증가값이 적어짐)
-            percent      =  currentTime / percendFadeTime;              // 0에서 1까지 올라감.
+            currentTime +=  Time.unscaledDeltaTime * zoomAndTimeSlowSpeed;      // 줌과 타임스케일 0까지(Time.deltaTime이므로, 많이 증가하다가, 타임스케일 조정에 따라 같이 증가값이 적어짐)
+            percent      =  currentTime / percendFadeTime;                      // 0에서 1까지 올라감.
 
-            //카메라 스케일 조정(2.2 -> 1.8)
-            CameraController.instance.mainCam.orthographicSize = Mathf.Lerp(2.2f, 1.8f, percent);
+            //카메라 스케일 조정(originOrthographicSize -> originFocusOrthographicSize)
+            CameraController.instance.mainCam.orthographicSize 
+                = Mathf.Lerp(CameraController.instance.originOrthographicSize,CameraController.instance.originFocusOrthographicSize, percent);
 
-            // 타임스케일 조정(0.3 -> 0.0)
-            Time.timeScale = Mathf.Lerp(0.3f, 0.0f, percent);
+            // 타임스케일 조정(0.1 -> 0.0)
+            // 픽스 델타타임 조정
+            Time.timeScale      = Mathf.Lerp(0.1f  , 0.0f, percent);
+            Time.fixedDeltaTime = Time.timeScale * 0.02f;                                              
             
             // 다음 코루틴(타임스케일이 0.01f 보다 작아지면)
             if (Time.timeScale < 0.01f) 
             {
                 Time.timeScale = 0.0f;
+                Time.fixedDeltaTime = Time.timeScale * 0.02f;
                 StartCoroutine(Scan());
                 yield break;
             }
@@ -113,11 +119,11 @@ public class PlayerParing : MonoBehaviour
 
         while (percent < 1) // 0.1초만에 percnet가 0에서 1이 됨.
         {
-            currentTime += Time.unscaledTime * scanSclaeSpeed * 0.0001f;  // 실제 시간 초 중첩
-            percent      = currentTime / percendFadeTime;                 // 0에서 1까지 올라감.
+            currentTime += Time.unscaledDeltaTime * scanSclaeSpeed * 0.01f;  // 실제 시간 초 중첩
+            percent      = currentTime / percendFadeTime;                      // 0에서 1까지 올라감.
 
             float scanScale;
-            scanScale = Mathf.Lerp(0.0f, 2.5f, percent);           // 0 -> 2
+            scanScale = Mathf.Lerp(0.0f, 3f, percent);           // 0 -> 2
             scanIns.transform.localScale = new Vector2(scanScale, scanScale);
             
             if (scanScale > 2.49f)
@@ -147,8 +153,6 @@ public class PlayerParing : MonoBehaviour
         CameraController.instance.mainCam.cullingMask = basicLayer;                                    // 원래 화면으로
         ParingEnd();                                                                                      // 패링끝
     }
-    
-    
     
     // 추적모드 
     private IEnumerator Trace()
@@ -226,13 +230,14 @@ public class PlayerParing : MonoBehaviour
                 temp = null;
             }
             
+            
             // 표적생성
             // 최종 선별 저장된 미사일 리스트 저장
             for (int i = 0; i < finalList.Count;i++)
             {
                 // AudioManager.instance.PlaySFX(0);                                                                     // 표적확인 사운드
-                Instantiate(targetMarkPrefabs, finalList[i].transform.position, Quaternion.identity);                 // 표적표시
-            
+                Instantiate(targetMarkPrefabs, finalList[i].transform.position, Quaternion.identity);                     // 표적표시
+             
                 yield return new WaitForSecondsRealtime(0.1f);
             }
             
@@ -255,22 +260,24 @@ public class PlayerParing : MonoBehaviour
             }
             
             //초기 위치 복귀
-            createPoint.transform.position = originLineCreateMovePoint;
+            //createPoint.transform.position = originLineCreateMovePoint;
             
             // 카메라 따라가기
-            CameraController.instance.focusNPC = createPoint;									// 포커스 할 NPC
-            CameraController.instance.focusIn  = true;											// focusIn true
+            CameraController.instance.focusPoint = createPoint;									                                                    // 포커스 변경
+            CameraController.instance.transform.position
+                = new Vector3(finalList[0].transform.position.x,finalList[0].transform.position.y,CameraController.instance.transform.position.z);  // 위치이동(☆시작 타이밍 연출 줘도 될듯)
+            CameraController.instance.focusIn    = true;									                                                        // focusIn true
 
             // 선따라 createPoint 이동 및 타임서클 생성
             // 범위 체크 및 발동 -> CheckRange() 함수
             for (int i = 0; i < finalList.Count;i++)
             {
+                rhythmGameState = false;     // 타임서클 리듬게임 실행 상태(이동 중 체크 불가능)
                 // 현재 제거하는 표적으로 이동 ☆☆
                 while (Vector2.Distance(createPoint.transform.position, finalList[i].transform.position) >= 0.1f && finalList[i] != false)  // 다가가서 겹치는 두 오브젝트의 거리
                 {
-                    rhythmGameState = false;     // 타임서클 리듬게임 실행 상태(이동 중 체크 불가능)
-                        createPoint.transform.position = Vector2.MoveTowards(createPoint.transform.position, finalList[i].transform.position, 0.05f);
-                        yield return new WaitForSecondsRealtime(0.01f);
+                    createPoint.transform.position = Vector2.MoveTowards(createPoint.transform.position, finalList[i].transform.position, 0.05f);
+                    yield return new WaitForSecondsRealtime(0.01f);
                 }
                 
                 // 타임서클 생성(위치 도착)
@@ -322,14 +329,15 @@ public class PlayerParing : MonoBehaviour
             }
             
             // 카메라 원래대로 복귀
-            CameraController.instance.focusNPC = null;
+            CameraController.instance.focusPoint = null;
             CameraController.instance.focusIn  = false;
-            CameraController.instance.GetComponent<Camera>().orthographicSize = 2.2f;
+            CameraController.instance.mainCam.orthographicSize = CameraController.instance.originOrthographicSize;
             CameraController.instance.transform.position
                 = new Vector3(CameraController.instance.target.transform.position.x,CameraController.instance.target.transform.position.y,CameraController.instance.transform.position.z);
             createPoint.transform.position = originLineCreateMovePoint;  // 초기 위치 복귀
             yield return new WaitForSecondsRealtime(1.0f);           // 멈췄다가 터지는 연출
             Time.timeScale = 1.0f;
+            Time.fixedDeltaTime = Time.timeScale * 0.02f; 
             paringState = true;                                          // 스킬사용 상태
 
             // 상태변경 해줘야 할 불렛이 있고,
@@ -442,10 +450,10 @@ public class PlayerParing : MonoBehaviour
     {
         finalList.Clear();                              // 리스트 클리어
         //카메라 이동
-        CameraController.instance.mainCam.orthographicSize = 2.2f;
+        CameraController.instance.mainCam.orthographicSize = CameraController.instance.originOrthographicSize;
         CameraController.instance.transform.position 
             = new Vector3(CameraController.instance.target.transform.position.x,CameraController.instance.target.transform.position.y,CameraController.instance.transform.position.z); //☆
-        CameraController.instance.focusNPC = null;
+        CameraController.instance.focusPoint = null;
         CameraController.instance.focusIn  = false;
         
         // 시간 정상화
@@ -466,4 +474,3 @@ public class PlayerParing : MonoBehaviour
         return 0;
     }
 }
-

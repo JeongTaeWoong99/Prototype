@@ -25,4 +25,5 @@ public class BossBodytakeDamage : MonoBehaviour
         spriteRenderer.color = Color.white;
     }
     
+
 }

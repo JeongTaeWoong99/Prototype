@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -10,7 +11,7 @@ public class PlayerController : MonoBehaviour
     public SpriteRenderer bodySR;   
     [HideInInspector]
     public Animator       animator;
-    //public Animator       bladeAnimator;
+    public Animator       bladeAnimator;
     
     public GameObject     deathPrefabs;                 // 사망 프리팹         
 
@@ -41,7 +42,7 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector]
     public  bool       attackState     = false;        
-    //private float      timeSinceAttack = 0.0f;          
+    private float      timeSinceAttack = 0.0f;          // 콤보 시간 체크  
     private int        currentAttack   = 0;             
     public  LayerMask  enemyLayer;
     public  GameObject damagePoint;                    
@@ -133,7 +134,7 @@ public class PlayerController : MonoBehaviour
             // }
             
             // 기본상태 전환 // 모션 울찔울찔 방지 키 조건
-            if (theRB.velocity != Vector2.zero && isGrounded == true &&(Input.GetKey("right") || Input.GetKey("left")))
+            if (theRB.velocity != Vector2.zero &&(Input.GetKey("right") || Input.GetKey("left")))
             {
                 animator.SetBool("Walking", true);
             }
@@ -164,8 +165,8 @@ public class PlayerController : MonoBehaviour
         }
 
         // 대쉬 조건
-        if (Input.GetKey(KeyCode.S) && rollState == true && takeHitState == true&& skillState == true &&
-            UIStoryTalk.instance.storyTalkEndState == true && UIEvent.instance.eventState == true)
+        if (Input.GetKey(KeyCode.S) && rollState && takeHitState && skillState && PlayerParing.instance.paringState &&
+            UIStoryTalk.instance.storyTalkEndState && UIEvent.instance.eventState)
         {
             if (dashCoolCounter <= 0)
             {
@@ -195,32 +196,24 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        // 미끄러지면서 공격하는 것 방지
-        theRB.velocity = new Vector2(0f, theRB.velocity.y);						// 이동멈춤(E누르고 나가는 경우 방지)
+        theRB.velocity = new Vector2(0f, theRB.velocity.y);    // 미끄러지면서 공격하는 것 방지		
         
         // 공격시 앞으로 살짝 나감
         if(transform.localScale.x == 1)
-            theRB.AddForce(transform.right * 50f);
+            theRB.AddForce(transform.right * 100f);
         else
-            theRB.AddForce(-transform.right * 50f);
+            theRB.AddForce(-transform.right * 100f);
         
-        //currentAttack++;
+        currentAttack++;                                         // 콤보 애니메이션 변경
         
-        // Loop back to one after third attack
-        // if (currentAttack > 3)
-        //     currentAttack = 1;
-        currentAttack = 1;
+        // 콤보숫자 넘어감 or 콤보누적시간 넘어감
+         if (currentAttack > 3 || timeSinceAttack >1.0f)
+             currentAttack = 1;
         
-        // Reset Attack combo if time since last attack is too large
-        // if (timeSinceAttack > 1.0f)
-        //     currentAttack = 1;
-        
-        // Call one of three attack animations "Attack1", "Attack2", "Attack3"
-        animator.SetTrigger("Attack_" + currentAttack);
+        animator.SetTrigger("Attack_" + currentAttack);     // 애니메이션 재생
         //bladeAnimator.SetTrigger("Attack_" + currentAttack);
-        
-        // Reset timer
-        // timeSinceAttack = 0.0f;
+
+         timeSinceAttack = 0.0f;                                 // 콤보시간 리셋(StateCheckTimer()에서 체크함)
     }
     
     private void GroundState()
@@ -230,15 +223,23 @@ public class PlayerController : MonoBehaviour
         isGrounded    = Physics2D.OverlapCircle(footPosition, 0.05f, groundLayer);     // ground + Object 레이어에 닿으면 true 아니면 false
         animator.SetFloat("AirSpeedY", theRB.velocity.y);                                      // 낙하모션 변경 트리거
         
-        if (isGrounded == true && theRB.velocity.y <= 0.0f)                                         // 점프시 isGruonded 바로 false되 않기 때문에, y 조건 추가
+        if (isGrounded && theRB.velocity.y <= 0.0f)                                                 // 점프시 isGruonded 바로 false되 않기 때문에, y 조건 추가
         {
             animator.SetBool("Landing", true);
             currentJumpCount = maxJumpCount;
+        }
+        else if (isGrounded == false && theRB.velocity.y <= 0.0f)
+        {
+            animator.SetBool("Landing", false);
         }
     }
 
     private void Dash(float direction)
 	{
+        animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        Time.timeScale = 0.1f;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;                                           // 부드러운 fixedUpdate를 위해 설정
+
         dashInputX           = direction;                          
         transform.localScale = new Vector2(direction, 1f);
         activeMoveSpeed      = dashSpeed;                                     // 속도변경
@@ -267,10 +268,10 @@ public class PlayerController : MonoBehaviour
             // 적
             if (hit[i].GetComponent<EnemyController>() == true)
             {
-                if(hit[i].GetComponent<EnemyController>().weaknessState == true)
-                    hit[i].GetComponent<EnemyController>().DamageEnemy(damageToGive * 10);
-                else
-                    hit[i].GetComponent<EnemyController>().DamageEnemy(damageToGive);
+                if(hit[i].GetComponent<EnemyController>().weaknessState)    // 취약상태 피격(보통 = 0, 기절 = 1)
+                    hit[i].GetComponent<EnemyController>().DamageEnemy(damageToGive,2);
+                else                                                        // 기본상태 피격
+                    hit[i].GetComponent<EnemyController>().DamageEnemy(damageToGive,1);
             }
             
             // 오브젝트
@@ -314,19 +315,32 @@ public class PlayerController : MonoBehaviour
         {
             attackState = true;              
         }
+        timeSinceAttack += Time.unscaledDeltaTime;      // 콤보 체크
         
         // 구르기
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Player_Dash"))          
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Player_Dash"))
         {
             rollState = false;
-            theRB.gravityScale = originGavityScale * 0.5f;
-            theRB.velocity = new Vector2(dashInputX * activeMoveSpeed, theRB.velocity.y); // 이동
+            if (dashInputX == 1)
+            {
+                theRB.MovePosition(theRB.position + new Vector2(1f,0f) * dashSpeed * Time.fixedDeltaTime);
+            }
+            else if (dashInputX == -1)
+            {
+                theRB.MovePosition(theRB.position + new Vector2(-1f,0f)* dashSpeed * Time.fixedDeltaTime);
+            }
         }
-        else                                     
-        {
+        else                             
+        { 
+            // 1회만 실행되어야 하는 것 ! ☆
+            if (rollState == false)
+            {
+                animator.updateMode = AnimatorUpdateMode.Normal;
+                Time.timeScale = 1f;
+                Time.fixedDeltaTime = Time.timeScale * 0.02f;
+            }
             rollState = true;
-            theRB.gravityScale = originGavityScale;
-            activeMoveSpeed = moveSpeed;
+            activeMoveSpeed    = moveSpeed;
         }
     
         if (dashCoolCounter > 0)                  
@@ -353,8 +367,6 @@ public class PlayerController : MonoBehaviour
 		{
             takeHitState = true;              
 		}
-        
-        
     }
 
 }

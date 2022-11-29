@@ -10,27 +10,28 @@ public class CameraController : MonoBehaviour
 	public  Transform  target;       // 카메라가 이동할 위치
 	
 	public  float      focusSpeed;   // 포커스 스피드
-	public  GameObject focusNPC;     // 포커스 할 NPC
+	public  GameObject focusPoint;   // 포커스 할 NPC
 
 	[HideInInspector]
 	public  bool       focusIn;
 
+	[HideInInspector] 
+	public float originOrthographicSize;			// 원래크기
+	public float originFocusOrthographicSize;       // 축소 할 크기
 	private void Awake()	
 	{
 		instance = this;
-
-		mainCam = GetComponent<Camera>();
 		
+		mainCam = GetComponent<Camera>();
+		originOrthographicSize = mainCam.orthographicSize;
 	}
 
 	private void Update()
 	{ 
 		// 포커스할 focusNPC 없고, 타겟이 있을 때 (플레이어 따라다님)
-		if (focusNPC == false && target)
+		if (focusPoint == false && target)
 		{
-			// 카메라 포지션 업데이트
-			// 기존 위치에서 x,y 값을 target 포지션으로 이동하고
-			// z 위치는 -10으로, 기존 위치와 동일하게 이동한다.(카메라 각도 이슈)
+			// moveSpeed * Time.deltaTime
 			transform.position = Vector3.MoveTowards(transform.position,
 				                                      new Vector3(target.position.x, target.position.y, transform.position.z),
 					                          moveSpeed * Time.deltaTime);
@@ -38,28 +39,28 @@ public class CameraController : MonoBehaviour
 		// focusNPC가 true이고, focusIn이 true 일 때
 		else if (focusIn)
 		{
-			// NPC 포커스
+			// NPC 포커스 포인트 (포커스 스피드 1배)
 			if (CompareTag("NPC"))
 			{
-				mainCam.orthographicSize = 1.8f;
-                				transform.position = Vector3.MoveTowards(new Vector3(transform.position.x, transform.position.y, transform.position.z),
-                					new Vector3(focusNPC.transform.position.x,focusNPC.transform.position.y, transform.position.z),
-                					focusSpeed * Time.unscaledTime);
+				mainCam.orthographicSize = originFocusOrthographicSize;
+				transform.position = Vector3.MoveTowards(new Vector3(transform.position.x, transform.position.y, transform.position.z),
+														  new Vector3(focusPoint.transform.position.x,focusPoint.transform.position.y, transform.position.z),
+												  focusSpeed * Time.unscaledDeltaTime);
 			}
-			// Z키 포커스포인트
+			// Z키 포커스 포인트 (포커스 스피드 3배)
 			else
 			{
 				transform.position = Vector3.MoveTowards(new Vector3(transform.position.x, transform.position.y, transform.position.z),
-					                                      new Vector3(focusNPC.transform.position.x,focusNPC.transform.position.y, transform.position.z),
-					                              focusSpeed * Time.unscaledTime);
+					                                      new Vector3(focusPoint.transform.position.x,focusPoint.transform.position.y, transform.position.z),
+					                              focusSpeed * 3f * Time.unscaledDeltaTime);
 			}
 
 		}
 		// focusNPC가 null이고, focusIn이 false 일 때
 		else if(focusIn == false)
 		{
-			focusNPC = null;
-			mainCam.orthographicSize = 2.2f;
+			focusPoint = null;
+			mainCam.orthographicSize = originOrthographicSize;
 			//transform.position = new Vector3(target.transform.position.x,seenWoladY,transform.position.z);
 		}
 		

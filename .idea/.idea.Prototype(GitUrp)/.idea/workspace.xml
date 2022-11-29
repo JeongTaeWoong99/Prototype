@@ -12,6 +12,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Script/UI/UIAutoSystem.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.2d.tilemap@1.0.0/Editor/GridPaintPaletteClipboard.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.render-pipelines.core@12.1.7/Runtime/Debugging/DebugUpdater.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.shadergraph@12.1.7/Editor/Data/Graphs/SerializableTexture.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -88,7 +89,17 @@
       <workItem from="1668298471398" duration="13157000" />
       <workItem from="1668462805439" duration="6095000" />
       <workItem from="1668490822025" duration="3158000" />
-      <workItem from="1668567370966" duration="9923000" />
+      <workItem from="1668567370966" duration="12373000" />
+      <workItem from="1668745566118" duration="4248000" />
+      <workItem from="1668778126910" duration="1191000" />
+      <workItem from="1668836576927" duration="8677000" />
+      <workItem from="1669083514590" duration="5541000" />
+      <workItem from="1669106725563" duration="3131000" />
+      <workItem from="1669129017438" duration="2584000" />
+      <workItem from="1669193547930" duration="12544000" />
+      <workItem from="1669352621995" duration="45044000" />
+      <workItem from="1669574707724" duration="2179000" />
+      <workItem from="1669639828071" duration="6901000" />
     </task>
     <servers />
   </component>

@@ -106,7 +106,7 @@ Transform:
   m_Children:
   - {fileID: 1982205516}
   m_Father: {fileID: 288448030}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &188988584
 GameObject:
@@ -329,7 +329,7 @@ GameObject:
   m_Component:
   - component: {fileID: 285373045}
   m_Layer: 0
-  m_Name: "\uAD6C\uC1314"
+  m_Name: "\uD0C0\uC774\uD2C04"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -350,7 +350,7 @@ Transform:
   - {fileID: 1492028971}
   - {fileID: 331314372}
   m_Father: {fileID: 288448030}
-  m_RootOrder: 6
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &288448029
 GameObject:
@@ -383,12 +383,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2059577210}
-  - {fileID: 1420470193}
   - {fileID: 477678558}
-  - {fileID: 145661971}
   - {fileID: 2104318003}
-  - {fileID: 1025237575}
   - {fileID: 285373045}
+  - {fileID: 1420470193}
+  - {fileID: 145661971}
+  - {fileID: 1025237575}
   - {fileID: 544179962}
   m_Father: {fileID: 500471993191709567}
   m_RootOrder: 9
@@ -581,7 +581,7 @@ GameObject:
   m_Component:
   - component: {fileID: 477678558}
   m_Layer: 0
-  m_Name: "\uAD6C\uC1312"
+  m_Name: "\uD0C0\uC774\uD2C02"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -602,7 +602,7 @@ Transform:
   - {fileID: 1025013481}
   - {fileID: 2138965050}
   m_Father: {fileID: 288448030}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &544179961
 GameObject:
@@ -1041,7 +1041,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 288448030}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1365119981
 GameObject:
@@ -1148,7 +1148,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 288448030}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1492028970
 GameObject:
@@ -1349,7 +1349,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2059577210}
   m_Layer: 0
-  m_Name: "\uAD6C\uC1311"
+  m_Name: "\uD0C0\uC774\uD2C01"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1382,7 +1382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2104318003}
   m_Layer: 0
-  m_Name: "\uAD6C\uC1313"
+  m_Name: "\uD0C0\uC774\uD2C03"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1396,14 +1396,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2104318002}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 850, y: 0, z: -9.511721}
+  m_LocalPosition: {x: 400, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1365119982}
   - {fileID: 959406440}
   m_Father: {fileID: 288448030}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2138965049
 GameObject:
@@ -2319,19 +2319,36 @@ MonoBehaviour:
   puaseState: 0
   puasePanel: {fileID: 288448029}
   focusRed: {fileID: 0}
-  invenComponent:
-  - text: {fileID: 0}
-    fullElement: {fileID: 0}
-    inerLine: []
-  - text: {fileID: 0}
-    fullElement: {fileID: 0}
-    inerLine: []
-  - text: {fileID: 0}
-    fullElement: {fileID: 0}
-    inerLine: []
-  - text: {fileID: 0}
-    fullElement: {fileID: 0}
-    inerLine: []
+  titleComponent:
+  - titleText: {fileID: 188988586}
+    insideFullElement: {fileID: 1420470192}
+    insideLine: []
+  - titleText: {fileID: 2138965051}
+    insideFullElement: {fileID: 145661970}
+    insideLine:
+    - element:
+      - elementFocus: {fileID: 0}
+        elementComponent: {fileID: 0}
+      - elementFocus: {fileID: 0}
+        elementComponent: {fileID: 0}
+    - element:
+      - elementFocus: {fileID: 0}
+        elementComponent: {fileID: 0}
+      - elementFocus: {fileID: 0}
+        elementComponent: {fileID: 0}
+      - elementFocus: {fileID: 0}
+        elementComponent: {fileID: 0}
+    - element:
+      - elementFocus: {fileID: 0}
+        elementComponent: {fileID: 0}
+      - elementFocus: {fileID: 0}
+        elementComponent: {fileID: 0}
+  - titleText: {fileID: 959406441}
+    insideFullElement: {fileID: 1025237574}
+    insideLine: []
+  - titleText: {fileID: 331314373}
+    insideFullElement: {fileID: 544179961}
+    insideLine: []
 --- !u!1 &500471993282518346
 GameObject:
   m_ObjectHideFlags: 0

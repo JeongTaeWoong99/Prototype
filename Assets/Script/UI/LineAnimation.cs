@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using System.Collections;
 
@@ -23,6 +22,13 @@ public class LineAnimation : MonoBehaviour
          linePoints[i] = lineRenderer.GetPosition(i);
       }
 
+      // 최초실행
+      StartCoroutine(AnimateLine());
+   }
+
+   private void OnEnable()
+   {
+      // 그 이후 실행
       StartCoroutine(AnimateLine());
    }
 
@@ -32,7 +38,7 @@ public class LineAnimation : MonoBehaviour
 
       for (int i = 0; i < pointsCount - 1; i++)
       {
-         float startTime = Time.time;
+         float startTime = Time.unscaledTime;                  // 퍼즈상태이니, un이고, 시작시간을 기록하는 것 이니, unscaledTime사용 (unscaledDeltaTime X)
 
          Vector3 startPosition = linePoints[i];
          Vector3 endPosition   = linePoints[i+1];
@@ -40,12 +46,12 @@ public class LineAnimation : MonoBehaviour
          Vector3 pos = startPosition;
          while (pos != endPosition)
          {
-            float t = (Time.time - startTime) / segmentDuration;
+            float t = (Time.unscaledTime - startTime) / segmentDuration;
             pos     = Vector3.Lerp(startPosition, endPosition, t);
-            
+
             for (int j = i + 1; j < pointsCount; j++)
-               lineRenderer.SetPosition(j,pos);   
-            
+               lineRenderer.SetPosition(j,pos);
+
             yield return null;
          }
       }

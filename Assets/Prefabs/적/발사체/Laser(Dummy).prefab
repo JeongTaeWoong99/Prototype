@@ -121,7 +121,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6149817873438746071}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -154,7 +154,7 @@ MonoBehaviour:
   missileBool: 0
   dummyBool: 1
   damage: 25
-  speed: 4.5
+  speed: 6
   minusFixedUpdateSpeed: 0
   minusMaxValue: 0
   rotSpeed: 0

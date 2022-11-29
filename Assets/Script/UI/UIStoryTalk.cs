@@ -25,7 +25,10 @@ public class UIStoryTalk : MonoBehaviour
 	{
 		// 스토리talk가 없을경우 바로 true
 		if (storyTalk.Count == 0)
+		{
 			storyTalkEndState = true;
+			UITxet.gameObject.SetActive(false);      // 텍스트 가리기	
+		}
 		else
 			StartCoroutine(StoryCoroutine());
 	}

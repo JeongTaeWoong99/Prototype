@@ -15,8 +15,8 @@ public class Boss : MonoBehaviour
     private Movement2D movement2D;
     private BossWeapon bossWeapon;
 
-    [SerializeField]
-    private GameObject  boomPrefab; 
+    // [SerializeField]
+    // private GameObject  boomPrefab; 
     public  GameObject  sparkPrefab;
 
     // 보스 사망 파티클 재생 후 씬 변환
@@ -76,7 +76,7 @@ public class Boss : MonoBehaviour
 
                 // 다 나타나고 Body 활성화
                 // Wait 시간으로 인해 1초동안 올라오면서 나타나게 됨.
-                yield return new WaitForSecondsRealtime(1f);
+                yield return new WaitForSeconds(1f);
                 phaseNum++;     // 0->1
                 anim.SetTrigger("SetPhase1");
 
@@ -85,6 +85,7 @@ public class Boss : MonoBehaviour
                 movement2D.MoveTo(Vector3.zero);
                 // Phase01 애니메이션 변경
                 ChangeState(BossState.Phase01);
+                break;
             }
             yield return null;
         }
@@ -99,7 +100,7 @@ public class Boss : MonoBehaviour
         while (true)
         {
             // 보스의 현재 체력이 70% 이하가 되면
-            if(BossHP.instance.currentHP <= BossHP.instance.maxHP * 0.70f)
+            if(BossHP.instance.currentHP <= BossHP.instance.maxHP * 1f)
             {
                 phaseNum++;     // 1->2
                 anim.SetTrigger("SetPhase2");
@@ -108,6 +109,7 @@ public class Boss : MonoBehaviour
                 bossWeapon.StopFiring(AttackType.Phase1);
                 // Phase02 애니메이션 변경
                 ChangeState(BossState.Phase02);
+                break;
             }
 
             yield return null;
@@ -137,6 +139,7 @@ public class Boss : MonoBehaviour
                 bossWeapon.StopFiring(AttackType.Phase2);
                 // Phase03 애니메이션 시작
                 ChangeState(BossState.Phase03);
+                break;
             }
 
             yield return null;
@@ -172,6 +175,8 @@ public class Boss : MonoBehaviour
         //     Instantiate(boomPrefab, restBullet[i].transform.position, quaternion.identity);
         //     Destroy(restBullet[i]);
         // }
+        
+        bossWeapon.StopFiring(AttackType.Phase3);
 
         movement2D.MoveTo(Vector3.down);
         UIController.instance.fadeToBlack = true;
@@ -180,6 +185,8 @@ public class Boss : MonoBehaviour
 
     private void PhaseBossBodyActive()
     {
+        
+        Debug.Log(phaseNum + "실행");
         if (phaseNum == 1)
         {
             for (int i = 0; i < phase1BossBody.Count; i++)
