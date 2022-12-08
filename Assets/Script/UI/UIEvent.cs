@@ -12,7 +12,7 @@ public class UIEvent : MonoBehaviour
 	public bool        bossRoomState;			   // boss
 	
 	public  Transform  startCameraMovePoint;	   // 이동위치				  
-	public  GameObject backGround;				   // 움직이지 않는 뒷배경(->삭제)
+	//public  GameObject backGround;				   // 움직이지 않는 뒷배경(->삭제)
 	private bool       startCameraMoveState;	   // 카메라 1회 호출 체크
 	public  float      fadeToTriggerTime;		   // 페이드가 끝난 후 가다리는시간
 	public  float      playerToMovePointTime;      // =                       
@@ -102,8 +102,9 @@ public class UIEvent : MonoBehaviour
 		{
 			UIController.instance.healthText.gameObject.SetActive(true);
 			UIController.instance.healthSlider.gameObject.SetActive(true);
+			UIController.instance.gageSlider.gameObject.SetActive(true);
 			
-			Destroy(backGround);				// 파괴
+			//Destroy(backGround);				// 파괴
 			startCameraMoveState = true;		// StartCameraMove() 더이상 호출 X				// 조건 걸어서 카메라 무브 여러번 사용하기
 			eventState           = true;		// 이벤트 끝										// 조건 걸어서 계속 달리기
 			
@@ -129,6 +130,7 @@ public class UIEvent : MonoBehaviour
 			CameraController.instance.target = startCameraMovePoint;
 			UIController.instance.healthText.gameObject.SetActive(false);
 			UIController.instance.healthSlider.gameObject.SetActive(false);
+			UIController.instance.gageSlider.gameObject.SetActive(false);
 		}
 	}
 

@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -45,6 +46,23 @@ public class EnemyController : MonoBehaviour
 	public bool weaknessState;					// true 취약상태 false 기본상태
 
 	//public bool tutoBotBool;					// true 훈련용봇
+	
+	private bool    isSlope;                      // 평지판단
+	private float   angle;						  // 지면과의 각도
+	private Vector2 perepndi;					  // 오르막길 대각선 각도
+	public  float   distance;                     // 표시해줄 선 거리
+	public  float   maxangle;					  // 오르막제한각도
+	public  LayerMask  groundLayer;				  // 그라운드레이어                     
+	
+	// [HideInInspector]
+	// public bool         lotasionState   = false;
+	public GameObject   archerHead;
+	public GameObject   archergunArm;
+	// private Vector3     dir;
+	// private float	   bodyAngle;
+	//public int rotateSpeed;
+
+	public GameObject alterLaser;
 
 	private void Awake()
 	{
@@ -85,7 +103,20 @@ public class EnemyController : MonoBehaviour
 				// 쫓기 범위 안(이동방향설정)
 				if ((Vector2.Distance(transform.position, PlayerController.instance.transform.position) < rangeToChasePlayer))
 				{
-					moveDirection = PlayerController.instance.transform.position.x - transform.position.x;
+					if(knightDamagePoint) 
+						moveDirection = PlayerController.instance.transform.position.x - transform.position.x;
+					else if (archerShootPoint)
+					{
+						if (Vector2.Distance(transform.position, PlayerController.instance.transform.position) <= 1.0f)
+						{
+							moveDirection = PlayerController.instance.transform.position.x - transform.position.x;
+							moveDirection *= -1f;
+						}
+						else
+						{
+							moveDirection = PlayerController.instance.transform.position.x - transform.position.x;
+						}
+					}
 				}
 				// 범위밖 (wander 상태)
 				else
@@ -117,14 +148,25 @@ public class EnemyController : MonoBehaviour
 				}
 				
 				// 좌우반전
-				if (moveDirection < 0.0f)
+				if (moveDirection < 0.0f)	//왼쪽
 				{
 					transform.localScale = new Vector2(-1f, 1f);
+					if (archerShootPoint)
+					{
+						archergunArm.transform.localScale = new Vector2(1f, 1f);
+						archerHead.transform.localScale   = new Vector2(1f, 1f);
+					}
+					
 					moveDirection = -1.0f;
 				}
-				else if (moveDirection > 0.0f)
+				else if (moveDirection > 0.0f)	// 오른쪽(본방향)
 				{
 					transform.localScale = new Vector2(1f,1f);
+					if (archerShootPoint)
+					{
+						archergunArm.transform.localScale = new Vector2(-1f, -1f);
+						archerHead.transform.localScale   = new Vector2(-1f, -1f);
+					}
 					moveDirection = 1.0f;
 				}
 				else if (moveDirection == 0.0f)
@@ -136,7 +178,42 @@ public class EnemyController : MonoBehaviour
 				// 공격 범위 안(공격)
 				if ((Vector2.Distance(transform.position, PlayerController.instance.transform.position) <= attackDistance))
 				{
-					animator.SetTrigger("Attack");
+					// 아쳐의 경우
+					if (archerShootPoint)
+					{
+						if (!(Vector2.Distance(transform.position, PlayerController.instance.transform.position) <= 1.0f))
+						{
+							Vector2 direction = new Vector2(archergunArm.transform.position.x - PlayerController.instance.transform.position.x, archergunArm.transform.position.y - PlayerController.instance.transform.position.y);
+							float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+							float originAngle = angle;
+							float absAngle = Mathf.Abs(angle);
+							if (transform.localScale.x == 1) // 오른쪽 // 따로 이산된 2 분면을 다룬다 90~180 + -90 ~ -180
+							{
+								if (absAngle > 130f && absAngle < 180)
+								{
+									archergunArm.transform.rotation = Quaternion.Euler(0, 0, originAngle);
+									archerHead.transform.rotation   = Quaternion.Euler(0, 0, originAngle);
+									Instantiate(alterLaser, archerShootPoint.position, quaternion.identity); // 라인렌더러의 디렉션으로 돌아감
+									animator.SetTrigger("Attack");
+								}
+							}
+							else if (transform.localScale.x == -1) // 왼쪽 // 연속된 2분면을 다룬다 90~ -90
+							{
+								if (absAngle > 0f && absAngle < 50)
+								{
+									archergunArm.transform.rotation = Quaternion.Euler(0, 0, originAngle);
+									archerHead.transform.rotation   = Quaternion.Euler(0, 0, originAngle);
+									Instantiate(alterLaser, archerShootPoint.position, quaternion.identity);              // 라인렌더러의 디렉션으로 돌아감
+									animator.SetTrigger("Attack");
+								}
+							}
+						}
+					}
+					// 나이트의 경우
+					else if (knightDamagePoint)
+					{
+						animator.SetTrigger("Attack");
+					}
 				}
 
 			}
@@ -153,6 +230,7 @@ public class EnemyController : MonoBehaviour
 			
 			// 최종 이동
 			theRB.velocity = new Vector2(moveDirection * moveSpeed, theRB.velocity.y);
+			
 		}
 		else
 		{
@@ -163,16 +241,20 @@ public class EnemyController : MonoBehaviour
 	// stateNum -> 1 기본 / 2 기절 / 
 	public void DamageEnemy(int damage, int stateNum)
 	{
-		currentHealth -= damage * stateNum;						// 상태에 따라 데미지 들어가는 값 다르게
-		animator.SetTrigger("TakeHit_" + stateNum);		// stateNum에 따라 피격모션 다르게
+		currentHealth -= damage * stateNum;						            // 상태에 따라 데미지 들어가는 값 다르게
+		animator.SetTrigger("TakeHit_" + stateNum);		            // stateNum에 따라 피격모션 다르게
 		moveDirection = 0.0f;
+		
+		if(archerShootPoint)
+			BodyDeactive();
 		
 		//너백
 		int random = Random.Range(300, 500);
-		if(PlayerController.instance.gameObject.transform.position.x - transform.position.x >= 0)
-			theRB.AddForce(-transform.right * random);
+		if (PlayerController.instance.gameObject.transform.position.x - transform.position.x >= 0
+		    && !isSlope)
+			theRB.AddForce(-transform.right * random* perepndi * -1);
 		else
-			theRB.AddForce(transform.right * random);
+			theRB.AddForce(transform.right * random * perepndi * -1);
 
 		if (currentHealth <= 0)
 		{
@@ -217,10 +299,10 @@ public class EnemyController : MonoBehaviour
 				if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3 ||
 				    animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.8)
 				{
-					if (transform.localScale.x == 1)
-						theRB.AddForce(transform.right  * 2f);
-					else
-						theRB.AddForce(-transform.right * 2f);
+					if (transform.localScale.x == 1 && !isSlope)
+						theRB.AddForce(transform.right  * 2f * perepndi * -1);
+					else if(transform.localScale.x == -1 && !isSlope)
+						theRB.AddForce(-transform.right * 2f  * perepndi * -1);
 				}
 			}
 		}
@@ -239,19 +321,99 @@ public class EnemyController : MonoBehaviour
 		{
 			takeHitState = true;		   //    타격 중 X
 		}
+		
+		// 미끄러짐 방지 및 오르막길 판단
+		if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+		{
+			theRB.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+		}
+		else
+		{
+			theRB.constraints = RigidbodyConstraints2D.FreezeRotation;
+		}
+        
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, distance, groundLayer);      // 몸 기준으로 아래로 선을 그려서, distance만큼 표시해 주고, groundLayer랑 닿아서, 상호작용 하고
+
+		if (hit)
+		{
+			perepndi = Vector2.Perpendicular(hit.normal).normalized;                                                               // nomal은 닿은 레이어 기준 90도(중앙)인데, Perpendicular는 반시계 90도 (Vector2 타입 반환) -> 언덕을 오를때 곱해줘야 해서 normalized
+			// Perpendicular 반시계 음수 백터값을 반환함
+			angle    = Vector2.Angle(hit.normal, Vector2.up);                                                                      // Angle은 닿은 레이어 기준 중앙                                      (float 타입 반환)
+
+			if (angle != 0)                 // 언덕 판단
+				isSlope = true;
+			else
+			{
+				isSlope = false;
+			}
+		}
+
+		// 팔 머리 회전감지
+		// if (lotasionState)
+		// {
+		// 	Vector2 direction = new Vector2(archergunArm.transform.position.x - PlayerController.instance.transform.position.x,
+		// 									archergunArm.transform.position.y - PlayerController.instance.transform.position.y);
+		// 	
+		// 	float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+		// 	archergunArm.transform.rotation = Quaternion.Euler(0, 0, 120f);
+		// 	archerHead.transform.rotation   = Quaternion.Euler(0, 0, 120f);
+		// 	
+			// 부드러운 움직임
+			// Quaternion angleAxis = Quaternion.AngleAxis(angle, Vector3.forward);
+			// Quaternion rotation   = Quaternion.Slerp(archergunArm.transform.rotation, angleAxis, rotateSpeed * Time.deltaTime);
+			// archergunArm.transform.rotation   = rotation;
+			// archerHead.transform.rotation     = rotation;
+			// if (transform.localScale.x == 1) // 오른쪽
+			// {
+			// 	float absAngle = Mathf.Abs(angle);
+			// 	
+			// 	if (absAngle > 120f && absAngle < 180)
+			// 	{
+			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, angle);
+			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, angle);
+			// 	}
+			// 	else if (archergunArm.transform.position.y > PlayerController.instance.transform.position.y)	// 플래이어 아래
+			// 	{
+			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, -120f);
+			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, -120f);
+			// 	}
+			// 	else if (archergunArm.transform.position.y < PlayerController.instance.transform.position.y)	// 플레이어가 위
+			// 	{
+			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, 120f);
+			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, 120f);
+			// 	}
+			// }
+			// else if(transform.localScale.x == -1)	// 왼쪽 
+			// {
+			// 	float absAngle = Mathf.Abs(angle);
+			// 	
+			// 	if (absAngle > 0f && absAngle < 60)
+			// 	{
+			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, angle);
+			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, angle);
+			// 	}
+			// 	else if (archergunArm.transform.position.y > PlayerController.instance.transform.position.y)	// 플래이어 아래
+			// 	{
+			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, -60f);
+			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, -60f);
+			// 	}
+			// 	else if (archergunArm.transform.position.y < PlayerController.instance.transform.position.y)	// 플레이어가 위
+			// 	{
+			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, 60f);
+			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, 60f);
+			// 	}
+			//
+			// }
+		//
+
 	}
 
 	public void MakeLaser()
 	{
-		if(transform.localScale.x > 0)
-		{
-			Instantiate(arrowPrefab, archerShootPoint.position, Quaternion.Euler(0, 0, 0));     // 0 ~ 30
-		}
-		else if (transform.localScale.x <= 0)
-		{
-			Instantiate(arrowPrefab, archerShootPoint.position, Quaternion.Euler(0, 0,  180)); // 210~ 240
-		}
+		Instantiate(arrowPrefab, archerShootPoint.position, archerShootPoint.rotation);
 	}
+	
+	
 
 	public void Hit()
 	{
@@ -274,20 +436,57 @@ public class EnemyController : MonoBehaviour
 
 	void OnDrawGizmos()
 	{
-		if (knightDamagePoint != null)
+		if (archerShootPoint)
+		{
+			Gizmos.color = Color.red;
+			Gizmos.DrawWireSphere(transform.position, attackDistance);
+			Gizmos.color = Color.blue;
+			Gizmos.DrawWireSphere(transform.position, rangeToChasePlayer);
+			
+		}
+		
+		if (knightDamagePoint)
 		{
 			Gizmos.color = Color.red;
 			Gizmos.DrawWireCube(knightDamagePoint.transform.position, new Vector2(0.8f, 0.3f));
+			Gizmos.color = Color.blue;
+			Gizmos.DrawWireSphere(transform.position, rangeToChasePlayer);
 		}
-	}
-
-	public void WeaknessStart()
-	{
-		weaknessState = true;
+		
+		
 	}
 	
-	public void WeaknessEnd()
+	// public void LotasionStart()
+	// {
+	// 	lotasionState = true;
+	// }
+	//
+	// public void LotasionEnd()
+	// {
+	// 	lotasionState = false;
+	// }
+
+	public void BodyActive()
 	{
-		weaknessState = false;
+		archergunArm.SetActive(true);
+		archerHead.SetActive(true);
+		archergunArm.GetComponent<Animator>().SetTrigger("Attack");
 	}
+
+	public void BodyDeactive()
+	{
+		archergunArm.SetActive(false);
+		archerHead.SetActive(false);
+	}
+	
+	//
+	// public void WeaknessStart()
+	// {
+	// 	weaknessState = true;
+	// }
+	//
+	// public void WeaknessEnd()
+	// {
+	// 	weaknessState = false;
+	// }
 }

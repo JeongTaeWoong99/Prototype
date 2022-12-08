@@ -437,6 +437,7 @@ Shader "Cartoon FX/Remaster/Particle Procedural Ring"
 			
 				CGPROGRAM
 
+				#pragma multi_compile CFXR_URP
 				#pragma multi_compile PASS_SHADOW_CASTER
 
 				#pragma vertex vertex_program

@@ -1,5 +1,5 @@
 ﻿Cartoon FX Remaster FREE, version R 1.0
-2022/09/16
+2022/11/30
 © 2012-2022 - Jean Moreno
 =======================================
 
@@ -99,5 +99,13 @@ I'd be happy to see any effects used in your project, so feel free to drop me a 
 RELEASE NOTES
 -------------
 
-R 1.0
+R 1.0.2
+- Removed GPU instancing support on the "CFXR Procedural Ring" shader, because it visually breaks it
+- Fixed compilation error related to 'projPos' in the "CFXR Particle Glow" shader
+
+R 1.0.1
+- Added support for GPU instancing in the shaders
+- Fixed possible build error when adding a text effect in a prefab due to HideFlags
+
+R 1.0.0
 - First release of "Cartoon FX Remaster FREE" with new free effects taken from all four Remaster packs

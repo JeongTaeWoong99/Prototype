@@ -1,20 +1,18 @@
 using UnityEngine;
 public class EnemyTraking : MonoBehaviour
 {
-    // 켄버스 트레킹에 사용
-    
-    public  GameObject  body;   // Enemy 위치
-    public  GameObject  hole;   // 전체삭제
+    public  GameObject  body;   // 따라다닐 위치
+    public  GameObject  hole;   // 따라다니던 오브젝트가 파괴될 시 없앨 본인
         
     private void FixedUpdate()
     {
-        if (body == true)
+        if (body)
         {
-            transform.position = body.transform.position;
+             transform.position = body.transform.position;
         }
-        else
+        else if(body == false)
         {
             Destroy(hole);
         }
     }
-}
+} 

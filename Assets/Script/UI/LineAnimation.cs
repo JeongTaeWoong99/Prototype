@@ -3,7 +3,7 @@ using System.Collections;
 
 public class LineAnimation : MonoBehaviour
 {
-   [SerializeField] 
+   [SerializeField]
    private float animationDuration = 5f;     // 그려지는 시간
 
    private LineRenderer lineRenderer;

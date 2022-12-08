@@ -1,0 +1,5 @@
+First i wanna thank you for purchasing this asset and supporting me as an indie game dev/illustrator !
+
+Just drag and drop the Unity Package into your new project and everything should be imported all the graphics, animations, vfx, scripts and the demo scene.
+
+Thanks again and Best of Luck in your game dev journey!

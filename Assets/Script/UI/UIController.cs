@@ -18,7 +18,10 @@ public class UIController : MonoBehaviour
 
     public TextMeshProUGUI healthText;      // 체력테스트     
     public Slider          healthSlider;    // UI의 Slider    참조
-	public Slider          gageSlider;
+    public Image           healthImage;
+
+    public Slider          gageSlider;
+	//public float           currentGage;
 
 	private int   currentNum = 0;                                       // 현재 선택된 넘버
 
@@ -48,7 +51,7 @@ public class UIController : MonoBehaviour
 
 		// 페이드 작동
 		Fade();
-
+		
 	}
 
 	private void Fade()

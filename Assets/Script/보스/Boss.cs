@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public enum BossState {Pahse00 = 0,Phase01,Phase02,Phase03}
 
@@ -18,6 +19,7 @@ public class Boss : MonoBehaviour
     // [SerializeField]
     // private GameObject  boomPrefab; 
     public  GameObject  sparkPrefab;
+    public  GameObject  boomPrefab;
 
     // 보스 사망 파티클 재생 후 씬 변환
     // [SerializeField]
@@ -30,9 +32,11 @@ public class Boss : MonoBehaviour
     private int              phaseNum = 0;                                              // pahse별 생성 파괴 함수에 사용
     public  List<GameObject> phase1BossBody = new List<GameObject>();    
     public  List<GameObject> phase2BossBody = new List<GameObject>();    
-    public  List<GameObject> phase3BossBody = new List<GameObject>();
+    //public  List<GameObject> phase3BossBody = new List<GameObject>();
     
     private DissolveController dissolveController;
+    
+    public  List<GameObject> brokenPiece = new List<GameObject>();        // 파편 배열
     
 
 
@@ -91,23 +95,28 @@ public class Boss : MonoBehaviour
         }
     }
 
-    // 열거형 1번 (Phase01)
     private IEnumerator Phase01()
     {
-        // Phase1 공격패턴 시작
+        // Phase2 공격패턴 시작
         bossWeapon.StartFiring(AttackType.Phase1);
 
         while (true)
         {
-            // 보스의 현재 체력이 70% 이하가 되면
-            if(BossHP.instance.currentHP <= BossHP.instance.maxHP * 1f)
+            // 보스의 현재 체력이 50% 이하가 되면
+            if (BossHP.instance.currentHP <= BossHP.instance.maxHP * 0.5f)
             {
                 phaseNum++;     // 1->2
                 anim.SetTrigger("SetPhase2");
                 
+                // 스파크 생성
+                for (int i = 0; i < phase1BossBody.Count; i++)
+                {
+                    Instantiate(sparkPrefab, phase1BossBody[i].transform.position, Quaternion.identity);
+                }
+
                 // Phase01 공격패턴 멈춤
                 bossWeapon.StopFiring(AttackType.Phase1);
-                // Phase02 애니메이션 변경
+                // Phase02 애니메이션 시작
                 ChangeState(BossState.Phase02);
                 break;
             }
@@ -116,41 +125,11 @@ public class Boss : MonoBehaviour
         }
     }
 
+    // Phase03
     private IEnumerator Phase02()
     {
         // Phase2 공격패턴 시작
         bossWeapon.StartFiring(AttackType.Phase2);
-
-        while (true)
-        {
-            // 보스의 현재 체력이 30% 이하가 되면
-            if (BossHP.instance.currentHP <= BossHP.instance.maxHP * 0.30f)
-            {
-                phaseNum++;     // 2->3
-                anim.SetTrigger("SetPhase3");
-                
-                // 스파크 생성
-                for (int i = 0; i < phase2BossBody.Count; i++)
-                {
-                    Instantiate(sparkPrefab, phase2BossBody[i].transform.position, Quaternion.identity);
-                }
-
-                // Phase02 공격패턴 멈춤
-                bossWeapon.StopFiring(AttackType.Phase2);
-                // Phase03 애니메이션 시작
-                ChangeState(BossState.Phase03);
-                break;
-            }
-
-            yield return null;
-        }
-    }
-
-    // Phase03
-    private IEnumerator Phase03()
-    {
-        // Phase3 공격패턴 시작
-        bossWeapon.StartFiring(AttackType.Phase3);
 
         while (true)
         {
@@ -176,7 +155,7 @@ public class Boss : MonoBehaviour
         //     Destroy(restBullet[i]);
         // }
         
-        bossWeapon.StopFiring(AttackType.Phase3);
+        bossWeapon.StopFiring(AttackType.Phase2);
 
         movement2D.MoveTo(Vector3.down);
         UIController.instance.fadeToBlack = true;
@@ -185,8 +164,6 @@ public class Boss : MonoBehaviour
 
     private void PhaseBossBodyActive()
     {
-        
-        Debug.Log(phaseNum + "실행");
         if (phaseNum == 1)
         {
             for (int i = 0; i < phase1BossBody.Count; i++)
@@ -201,13 +178,13 @@ public class Boss : MonoBehaviour
                 phase2BossBody[i].SetActive(true);
             }
         }
-        else if (phaseNum == 3)
-        {
-            for (int i = 0; i < phase3BossBody.Count; i++)
-            {
-                phase3BossBody[i].SetActive(true);
-            }
-        }
+        // else if (phaseNum == 3)
+        // {
+        //     for (int i = 0; i < phase3BossBody.Count; i++)
+        //     {
+        //         phase3BossBody[i].SetActive(true);
+        //     }
+        // }
     }
 
     private void PhaseBossBodyBoom()
@@ -219,6 +196,13 @@ public class Boss : MonoBehaviour
         {
             for (int i = 0; i < phase1BossBody.Count; i++)
             {
+                // 조각생성 반복
+                for (int k = 0; k < brokenPiece.Count; k++)
+                {
+                    int angle       = Random.Range(0, 180);
+                    Instantiate(brokenPiece[k], phase1BossBody[i].transform.position, Quaternion.Euler(0, 0,  angle));
+                }
+                Instantiate(boomPrefab, phase1BossBody[i].transform.position, quaternion.identity);
                 Destroy(phase1BossBody[i]);
             }
         }
@@ -229,12 +213,12 @@ public class Boss : MonoBehaviour
                 Destroy(phase2BossBody[i]);
             }
         }
-        else if (phaseNum == 4)
-        {
-            for (int i = 0; i < phase3BossBody.Count; i++)
-            {
-                Destroy(phase3BossBody[i]);
-            }
-        }
+        // else if (phaseNum == 4)
+        // {
+        //     for (int i = 0; i < phase3BossBody.Count; i++)
+        //     {
+        //         Destroy(phase3BossBody[i]);
+        //     }
+        // }
     }
 }

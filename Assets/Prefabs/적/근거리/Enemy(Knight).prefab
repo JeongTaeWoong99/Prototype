@@ -696,13 +696,13 @@ MonoBehaviour:
   theBody: {fileID: 6719343457604695514}
   theRB: {fileID: 6719343457604695515}
   animator: {fileID: 6719343457604695512}
-  moveSpeed: 1.5
+  moveSpeed: 2
   currentHealth: 0
   maxHealth: 500
   penalty: 0
   rangeToChasePlayer: 4
   wanderLength: 0.5
-  pauseLength: 0.5
+  pauseLength: 1
   whatIsLayer:
     serializedVersion: 2
     m_Bits: 1152
@@ -716,6 +716,14 @@ MonoBehaviour:
   takeHitState: 0
   attackState: 0
   weaknessState: 0
+  distance: 1
+  maxangle: 90
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 66816
+  archerHead: {fileID: 0}
+  archergunArm: {fileID: 0}
+  alterLaser: {fileID: 0}
 --- !u!114 &4624600182694277977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -728,6 +736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31cc7a5b6e39483489de8e7de5a2766b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frontSubBody: []
 --- !u!114 &4169719110310924082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -743,7 +752,7 @@ MonoBehaviour:
   UITxet: {fileID: 1926803639663567338}
   aloneTalk:
   - "\uC81C\uAC70"
-  - "\uC18C\uAC01"
+  - "\uD3EC\uD68D"
   textBoard: {fileID: 3550532942138551157}
 --- !u!1 &7175201377843618105
 GameObject:
@@ -949,7 +958,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7066e0747291df44fa5c2bf93bee3a6e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8011de6f0723e4185a425e39e1676ac6, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

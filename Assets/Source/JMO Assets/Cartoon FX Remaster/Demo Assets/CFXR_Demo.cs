@@ -121,6 +121,7 @@ namespace CartoonFX
 		public Transform demoCamera;
 		public MonoBehaviour bloom;
 		public float rotationSpeed = 10f;
+		public float zoomFactor = 1f;
 
 		bool slowMotion = false;
 		bool rotateCamera = false;
@@ -143,7 +144,11 @@ namespace CartoonFX
 			var list = new List<GameObject>();
 			for (int i = 0; i < this.transform.childCount; i++)
 			{
-				list.Add(this.transform.GetChild(i).gameObject);
+				var effect = this.transform.GetChild(i).gameObject;
+				list.Add(effect);
+
+				var cfxrEffect= effect.GetComponent<CFXR_Effect>();
+				if (cfxrEffect != null) cfxrEffect.clearBehavior = CFXR_Effect.ClearBehavior.Disable;
 			}
 			effectsList = list.ToArray();
 
@@ -163,11 +168,6 @@ namespace CartoonFX
 				if (currentEffect != null)
 				{
 					var ps = currentEffect.GetComponent<ParticleSystem>();
-					if (ps == null)
-					{
-						return;
-					}
-
 					if (ps.isEmitting)
 					{
 						ps.Stop(true);
@@ -231,7 +231,7 @@ namespace CartoonFX
 			float scroll = Input.GetAxis("Mouse ScrollWheel");
 			if (scroll != 0f)
 			{
-				Camera.main.transform.Translate(Vector3.forward * (scroll < 0f ? -1f : 1f), Space.Self);
+				Camera.main.transform.Translate(Vector3.forward * (scroll < 0f ? -1f : 1f) * zoomFactor, Space.Self);
 			}
 		}
 

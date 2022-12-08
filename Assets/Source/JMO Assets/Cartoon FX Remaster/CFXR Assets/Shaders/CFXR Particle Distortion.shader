@@ -154,9 +154,10 @@ Shader "Cartoon FX/Remaster/Particle Screen Distortion"
 				o.grabPassPosition = ComputeGrabScreenPos(o.pos);
 		#endif
 
-				o.color = v.color;
-				o.uv_random = v.texcoord;
+				o.color = GetParticleColor(v.color);
 				o.custom1 = v.texcoord1;
+				GetParticleTexcoords(o.uv_random.xy, o.uv_random.zw, o.custom1.y, v.texcoord, v.texcoord1.y);
+				//o.uv_random = v.texcoord;
 
 				return vert(v, o);
 			}
@@ -211,6 +212,7 @@ Shader "Cartoon FX/Remaster/Particle Screen Distortion"
 				#pragma target 2.0
 				
 				#pragma multi_compile_instancing
+				#pragma instancing_options procedural:ParticleInstancingSetup
 				#pragma multi_compile_fog
 				//#pragma multi_compile_fwdbase
 				//#pragma multi_compile SHADOWS_SCREEN
@@ -239,6 +241,7 @@ Shader "Cartoon FX/Remaster/Particle Screen Distortion"
 				#pragma target 2.0
 				
 				#pragma multi_compile_instancing
+				#pragma instancing_options procedural:ParticleInstancingSetup
 				#pragma multi_compile_fog
 				//#pragma multi_compile_fwdbase
 				//#pragma multi_compile SHADOWS_SCREEN
@@ -250,7 +253,6 @@ Shader "Cartoon FX/Remaster/Particle Screen Distortion"
 				#pragma shader_feature_local _ _FADING_ON
 				#pragma shader_feature_local _ _ALPHATEST_ON
 				#pragma shader_feature_local _ _DEBUG_VISUALIZE_DISTORTION
-
 
 				ENDCG
 			}
@@ -276,11 +278,14 @@ Shader "Cartoon FX/Remaster/Particle Screen Distortion"
 
 				#pragma vertex vertex_program
 				#pragma fragment fragment_program
-				
-				#pragma target 2.0
-				
+
+				//vertInstancingSetup writes to global, not allowed with DXC
+				#pragma never_use_dxc
+				#pragma target 2.5
+
 				#pragma multi_compile_particles
 				#pragma multi_compile_instancing
+				#pragma instancing_options procedural:vertInstancingSetup
 				#pragma multi_compile_fog
 				//#pragma multi_compile_fwdbase
 				//#pragma multi_compile SHADOWS_SCREEN
@@ -289,6 +294,8 @@ Shader "Cartoon FX/Remaster/Particle Screen Distortion"
 				#pragma shader_feature_local _ _FADING_ON
 				#pragma shader_feature_local _ _ALPHATEST_ON
 				#pragma shader_feature_local _ _DEBUG_VISUALIZE_DISTORTION
+
+				#include "UnityStandardParticleInstancing.cginc"
 
 				ENDCG
 			}

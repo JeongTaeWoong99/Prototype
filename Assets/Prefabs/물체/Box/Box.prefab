@@ -76,7 +76,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1044061875
-  m_SortingLayer: 1
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 4098156409588004937, guid: b1e514ee9c00f0c458e99f588dfa4cb0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -175,12 +175,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   brokenPiece:
-  - {fileID: 5189119440923914978, guid: a94306cadfd72b44a8980c5a6d3beda8, type: 3}
-  - {fileID: 5189119440923914978, guid: ce546d90cde1c824b8ccb74356b39b54, type: 3}
+  - {fileID: 5189119440923914978, guid: 9f2b5c8f3cbf73e438901a652fa9642a, type: 3}
+  - {fileID: 5189119440923914978, guid: 609c51e3202f3424183bce075c3d5125, type: 3}
+  - {fileID: 5189119440923914978, guid: 5c15e56be53a0b8459510e01756028e3, type: 3}
   - {fileID: 5189119440923914978, guid: 415fcae0775222041859b4d742c1f577, type: 3}
   - {fileID: 5189119440923914978, guid: c6ae8508c887bc14dae7bce7e31bc971, type: 3}
   - {fileID: 5189119440923914978, guid: 9890ba9fe3f5f7f439ab1fee6eb4987d, type: 3}
-  - {fileID: 5189119440923914978, guid: 9f2b5c8f3cbf73e438901a652fa9642a, type: 3}
   maxPieces: 6
 --- !u!114 &2696219132887727825
 MonoBehaviour:
@@ -194,3 +194,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31cc7a5b6e39483489de8e7de5a2766b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frontSubBody: []

@@ -3,6 +3,10 @@
 // (c) 2012-2020 Jean Moreno
 //--------------------------------------------------------------------------------------------------------------------------------
 
+#if defined(UNITY_PARTICLE_INSTANCING_ENABLED)
+	#pragma exclude_renderers gles
+#endif
+
 #if defined(GLOBAL_DISABLE_SOFT_PARTICLES) && !defined(DISABLE_SOFT_PARTICLES)
 	#define DISABLE_SOFT_PARTICLES
 #endif
@@ -86,7 +90,7 @@
 		//Macros
 
 		// Project Position
-	#if !defined(DISABLE_SOFT_PARTICLES) && ( (defined(SOFTPARTICLES_ON) || defined(CFXR_URP) || defined(SOFT_PARTICLES_ORTHOGRAPHIC)) && defined(_FADING_ON) )
+	#if !defined(PASS_SHADOW_CASTER) && !defined(GLOBAL_DISABLE_SOFT_PARTICLES) && !defined(DISABLE_SOFT_PARTICLES) && ( (defined(SOFTPARTICLES_ON) || defined(CFXR_URP) || defined(SOFT_PARTICLES_ORTHOGRAPHIC)) && defined(_FADING_ON) )
 		#define vertProjPos(o, clipPos) \
 			o.projPos = ComputeScreenPos(clipPos); \
 			COMPUTE_EYEDEPTH(o.projPos.z);
@@ -95,7 +99,7 @@
 	#endif
 
 		// Soft Particles
-	#if !defined(DISABLE_SOFT_PARTICLES) && ((defined(SOFTPARTICLES_ON) || defined(CFXR_URP) || defined(SOFT_PARTICLES_ORTHOGRAPHIC)) && defined(_FADING_ON))
+	#if !defined(PASS_SHADOW_CASTER) && !defined(GLOBAL_DISABLE_SOFT_PARTICLES) && !defined(DISABLE_SOFT_PARTICLES) && ((defined(SOFTPARTICLES_ON) || defined(CFXR_URP) || defined(SOFT_PARTICLES_ORTHOGRAPHIC)) && defined(_FADING_ON))
 		#define fragSoftParticlesFade(i, color) \
 			color *= SoftParticles(_SoftParticlesFadeDistanceNear, _SoftParticlesFadeDistanceFar, i.projPos);
 	#else
@@ -103,7 +107,7 @@
 	#endif
 
 		// Edge fade (note: particle meshes are already in world space)
-	#if defined(_CFXR_EDGE_FADING)
+	#if !defined(PASS_SHADOW_CASTER) && defined(_CFXR_EDGE_FADING)
 		#define vertEdgeFade(v, color) \
 			float3 viewDir = UnityWorldSpaceViewDir(v.vertex); \
 			float ndv = abs(dot(normalize(viewDir), v.normal.xyz)); \
@@ -210,3 +214,147 @@
 			SHADOW_CASTER_FRAGMENT(i)
 		#endif
 		}
+
+	// ================================================================================================================================
+	// ParticlesInstancing.hlsl
+	// ================================================================================================================================
+
+#if defined(CFXR_URP)
+	#if defined(UNITY_PROCEDURAL_INSTANCING_ENABLED) && !defined(SHADER_TARGET_SURFACE_ANALYSIS)
+		#define UNITY_PARTICLE_INSTANCING_ENABLED
+	#endif
+
+	#if defined(UNITY_PARTICLE_INSTANCING_ENABLED)
+
+		#ifndef UNITY_PARTICLE_INSTANCE_DATA
+			#define UNITY_PARTICLE_INSTANCE_DATA DefaultParticleInstanceData
+		#endif
+
+		struct DefaultParticleInstanceData
+		{
+			float3x4 transform;
+			uint color;
+			float animFrame;
+		};
+
+		StructuredBuffer<UNITY_PARTICLE_INSTANCE_DATA> unity_ParticleInstanceData;
+		float4 unity_ParticleUVShiftData;
+		float unity_ParticleUseMeshColors;
+
+		void ParticleInstancingMatrices(out float4x4 objectToWorld, out float4x4 worldToObject)
+		{
+			UNITY_PARTICLE_INSTANCE_DATA data = unity_ParticleInstanceData[unity_InstanceID];
+
+			// transform matrix
+			objectToWorld._11_21_31_41 = float4(data.transform._11_21_31, 0.0f);
+			objectToWorld._12_22_32_42 = float4(data.transform._12_22_32, 0.0f);
+			objectToWorld._13_23_33_43 = float4(data.transform._13_23_33, 0.0f);
+			objectToWorld._14_24_34_44 = float4(data.transform._14_24_34, 1.0f);
+
+			// inverse transform matrix (TODO: replace with a library implementation if/when available)
+			float3x3 worldToObject3x3;
+			worldToObject3x3[0] = objectToWorld[1].yzx * objectToWorld[2].zxy - objectToWorld[1].zxy * objectToWorld[2].yzx;
+			worldToObject3x3[1] = objectToWorld[0].zxy * objectToWorld[2].yzx - objectToWorld[0].yzx * objectToWorld[2].zxy;
+			worldToObject3x3[2] = objectToWorld[0].yzx * objectToWorld[1].zxy - objectToWorld[0].zxy * objectToWorld[1].yzx;
+
+			float det = dot(objectToWorld[0].xyz, worldToObject3x3[0]);
+
+			worldToObject3x3 = transpose(worldToObject3x3);
+
+			worldToObject3x3 *= rcp(det);
+
+			float3 worldToObjectPosition = mul(worldToObject3x3, -objectToWorld._14_24_34);
+
+			worldToObject._11_21_31_41 = float4(worldToObject3x3._11_21_31, 0.0f);
+			worldToObject._12_22_32_42 = float4(worldToObject3x3._12_22_32, 0.0f);
+			worldToObject._13_23_33_43 = float4(worldToObject3x3._13_23_33, 0.0f);
+			worldToObject._14_24_34_44 = float4(worldToObjectPosition, 1.0f);
+		}
+
+		void ParticleInstancingSetup()
+		{
+			ParticleInstancingMatrices(unity_ObjectToWorld, unity_WorldToObject);
+		}
+
+	#else
+
+		void ParticleInstancingSetup() {}
+
+	#endif
+#endif
+
+	// ================================================================================================================================
+	// Instancing functions
+	// ================================================================================================================================
+
+	float4 UnpackFromR8G8B8A8(uint rgba)
+	{
+		return float4(rgba & 255, (rgba >> 8) & 255, (rgba >> 16) & 255, (rgba >> 24) & 255) * (1.0 / 255);
+	}
+
+	half4 GetParticleColor(half4 color)
+	{
+		#if defined(UNITY_PARTICLE_INSTANCING_ENABLED)
+			#if !defined(UNITY_PARTICLE_INSTANCE_DATA_NO_COLOR)
+				UNITY_PARTICLE_INSTANCE_DATA data = unity_ParticleInstanceData[unity_InstanceID];
+				color = lerp(half4(1.0, 1.0, 1.0, 1.0), color, unity_ParticleUseMeshColors);
+				color *= UnpackFromR8G8B8A8(data.color);
+			#endif
+		#endif
+		return color;
+	}
+
+	void GetParticleTexcoords(out float2 outputTexcoord, out float2 outputTexcoord2, out float outputBlend, in float4 inputTexcoords, in float inputBlend)
+	{
+		#if defined(UNITY_PARTICLE_INSTANCING_ENABLED)
+			if (unity_ParticleUVShiftData.x != 0.0)
+			{
+				UNITY_PARTICLE_INSTANCE_DATA data = unity_ParticleInstanceData[unity_InstanceID];
+
+				float numTilesX = unity_ParticleUVShiftData.y;
+				float2 animScale = unity_ParticleUVShiftData.zw;
+				#ifdef UNITY_PARTICLE_INSTANCE_DATA_NO_ANIM_FRAME
+					float sheetIndex = 0.0;
+				#else
+					float sheetIndex = data.animFrame;
+				#endif
+
+				float index0 = floor(sheetIndex);
+				float vIdx0 = floor(index0 / numTilesX);
+				float uIdx0 = floor(index0 - vIdx0 * numTilesX);
+				float2 offset0 = float2(uIdx0 * animScale.x, (1.0 - animScale.y) - vIdx0 * animScale.y); // Copied from built-in as is and it looks like upside-down flip
+
+				outputTexcoord = inputTexcoords.xy * animScale.xy + offset0.xy;
+
+				#ifdef _FLIPBOOKBLENDING_ON
+					float index1 = floor(sheetIndex + 1.0);
+					float vIdx1 = floor(index1 / numTilesX);
+					float uIdx1 = floor(index1 - vIdx1 * numTilesX);
+					float2 offset1 = float2(uIdx1 * animScale.x, (1.0 - animScale.y) - vIdx1 * animScale.y);
+
+					outputTexcoord2.xy = inputTexcoords.xy * animScale.xy + offset1.xy;
+					outputBlend = frac(sheetIndex);
+				#endif
+			}
+			else
+		#endif
+			{
+				outputTexcoord = inputTexcoords.xy;
+				#ifdef _FLIPBOOKBLENDING_ON
+					outputTexcoord2.xy = inputTexcoords.zw;
+					outputBlend = inputBlend;
+				#endif
+			}
+
+		#ifndef _FLIPBOOKBLENDING_ON
+			outputTexcoord2.xy = inputTexcoords.xy;
+			outputBlend = 0.5;
+		#endif
+	}
+
+	void GetParticleTexcoords(out float2 outputTexcoord, in float2 inputTexcoord)
+	{
+		float2 dummyTexcoord2 = 0.0;
+		float dummyBlend = 0.0;
+		GetParticleTexcoords(outputTexcoord, dummyTexcoord2, dummyBlend, inputTexcoord.xyxy, 0.0);
+	}

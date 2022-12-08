@@ -13,6 +13,8 @@ TagManager:
   - Boss
   - PlayerBullet
   - BossBody
+  - AlterLine
+  - CamBox
   layers:
   - Default
   - TransparentFX
@@ -29,8 +31,8 @@ TagManager:
   - RangeCircle
   - Bullet
   - Boss
-  - 
-  - 
+  - CamBox
+  - Ground(Plat)
   - 
   - 
   - 

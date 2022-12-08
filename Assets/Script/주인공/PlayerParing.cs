@@ -7,9 +7,7 @@ public class PlayerParing : MonoBehaviour
 {
     public static PlayerParing instance;
     
-    //[HideInInspector] 
     public bool prmMode;                           // PRM 모드
-    //[HideInInspector]
     public bool traceMode;                         // Trace 모드
     
 	[HideInInspector]
@@ -18,8 +16,9 @@ public class PlayerParing : MonoBehaviour
 	public GameObject cameraMovePoint;             // 패링사용 카메라 무브포인트
 	public GameObject scanPrefabs;                 // 스켄 이미지 
 	public GameObject targetMarkPrefabs;           // 표적표시 프리팹
-	public GameObject createPoint;                 // 점선/타임서클 생성 위치   
-	public GameObject LinePrefabs;                 // 라인표시 프리팹
+	public GameObject createPoint;                 // 점선/타임서클 생성 위치
+    public GameObject line;
+    //public GameObject LinePrefabs;               // 라인표시 프리팹
 
     public GameObject greenCirclePrefabs;          // 초록
 	public GameObject yellowCirclePrefabs;         // 노랑
@@ -34,7 +33,8 @@ public class PlayerParing : MonoBehaviour
 	public  GameObject timeCircPrefabs;                             // 타임서클 프리팹
 	public  GameObject boomPrefabs;                                 // 격추 성공 폭파 프리팹
 	private GameObject currentTimeCircleClone;                      // 현재 작동되고 있는 타임서클 정보                            
-	private bool XkeeyState = false;                                    
+	private bool XkeeyState = false;
+    private float paringSuccesPlusGage;                             // 패링성공 확률에 따라 소량의 추가 게이지
 
 	public float      zoomAndTimeSlowSpeed;        // 줌과 타임스케일 0되는 속도
 	public float      scanSclaeSpeed;              // 쉴드 생성 속도
@@ -44,6 +44,7 @@ public class PlayerParing : MonoBehaviour
 
     private LayerMask basicLayer = ~(1 << 3);       // 실루엣 레이어 제외
 
+    
     class SortData
     {
         public float transformData;
@@ -58,6 +59,16 @@ public class PlayerParing : MonoBehaviour
     private void Start()
     {
         CameraController.instance.mainCam.cullingMask = basicLayer;                 // 게임 시작시 카메라 설정은 basic으로
+    }
+
+    private void Update()
+    {
+        
+        if (paringState == false && UIController.instance.gageSlider.value >= PlayerController.instance.currentGageValue / UIController.instance.gageSlider.maxValue + 0.01)
+        {
+            UIController.instance.gageSlider.value = Mathf.Lerp(UIController.instance.gageSlider.value, PlayerController.instance.currentGageValue/UIController.instance.gageSlider.maxValue,Time.unscaledDeltaTime * 5f);
+        }
+        
     }
 
     public void Paring()
@@ -212,7 +223,7 @@ public class PlayerParing : MonoBehaviour
     
             for (int i = 0; i < finalList.Count; i++)
             {
-                finalList[i].GetComponent<EnemyBullet>().anglePivotValue = Quaternion.FromToRotation(Vector3.up, finalList[i].transform.position - pivot.transform.position).eulerAngles.z;
+                finalList[i].GetComponent<EnemyBullet>().anglePivotValue = Quaternion.FromToRotation(Vector3.down, finalList[i].transform.position - pivot.transform.position).eulerAngles.z;
             }
     
             // 자리교체
@@ -230,7 +241,6 @@ public class PlayerParing : MonoBehaviour
                 temp = null;
             }
             
-            
             // 표적생성
             // 최종 선별 저장된 미사일 리스트 저장
             for (int i = 0; i < finalList.Count;i++)
@@ -246,27 +256,25 @@ public class PlayerParing : MonoBehaviour
             createPoint.transform.position = finalList[0].transform.position;
             for (int i = 0; i < finalList.Count - 1;i++)
             {
+                GameObject clone = Instantiate(line, finalList[i].transform.position, quaternion.identity);
+                clone.GetComponent<LineRenderer>().SetPosition(0,finalList[i].transform.position);
                 while ((Vector2.Distance(createPoint.transform.position, finalList[i+1].transform.position) >= 0.1f))  // 다가가서 겹치는 두 오브젝트의 거리
                 {
-                    Instantiate(LinePrefabs, createPoint.transform.position, quaternion.identity);
-                    createPoint.transform.position 
-                        = Vector2.MoveTowards(createPoint.transform.position, finalList[i+1].transform.position, 0.05f);
+                    createPoint.transform.position = Vector2.MoveTowards(createPoint.transform.position, finalList[i+1].transform.position, 25f * Time.unscaledDeltaTime);
+                    clone.GetComponent<LineRenderer>().SetPosition(1,createPoint.transform.position);
                     
-                    yield return new WaitForSecondsRealtime(0.015f);
+                    yield return new WaitForSecondsRealtime(0.01f);
                 }
                 
                 // 범위 도착하면, 정중앙으로 이동
                 createPoint.transform.position = finalList[i+1].transform.position;
             }
             
-            //초기 위치 복귀
-            //createPoint.transform.position = originLineCreateMovePoint;
-            
             // 카메라 따라가기
-            CameraController.instance.focusPoint = createPoint;									                                                    // 포커스 변경
-            CameraController.instance.transform.position
-                = new Vector3(finalList[0].transform.position.x,finalList[0].transform.position.y,CameraController.instance.transform.position.z);  // 위치이동(☆시작 타이밍 연출 줘도 될듯)
-            CameraController.instance.focusIn    = true;									                                                        // focusIn true
+            createPoint.transform.position               = new Vector3(finalList[0].transform.position.x,finalList[0].transform.position.y,CameraController.instance.transform.position.z);  // 위치 시작점으로 이동
+            CameraController.instance.transform.position = new Vector3(finalList[0].transform.position.x,finalList[0].transform.position.y,CameraController.instance.transform.position.z);  // 위치이동(☆시작 타이밍 연출 줘도 될듯)
+            CameraController.instance.focusPoint = createPoint;									                                                                                             // 포커스 변경
+            CameraController.instance.focusIn    = true;									                                                                                                 // focusIn true
 
             // 선따라 createPoint 이동 및 타임서클 생성
             // 범위 체크 및 발동 -> CheckRange() 함수
@@ -276,8 +284,8 @@ public class PlayerParing : MonoBehaviour
                 // 현재 제거하는 표적으로 이동 ☆☆
                 while (Vector2.Distance(createPoint.transform.position, finalList[i].transform.position) >= 0.1f && finalList[i] != false)  // 다가가서 겹치는 두 오브젝트의 거리
                 {
-                    createPoint.transform.position = Vector2.MoveTowards(createPoint.transform.position, finalList[i].transform.position, 0.05f);
-                    yield return new WaitForSecondsRealtime(0.01f);
+                    createPoint.transform.position = Vector2.MoveTowards(createPoint.transform.position, finalList[i].transform.position, 1.5f * Time.unscaledDeltaTime);
+                    yield return null;
                 }
                 
                 // 타임서클 생성(위치 도착)
@@ -291,15 +299,14 @@ public class PlayerParing : MonoBehaviour
                     
                     // 안에 들어가 있거나,
                     // X를 눌러서 XState가 true가 되면 줄어들기 멈춤
-                    if (destroyList.Find(((x) => x.gameObject == finalList[currentCheckFinalListNum].gameObject)) || XkeeyState == true)
+                    if (destroyList.Find(((x) => x.gameObject == finalList[currentCheckFinalListNum].gameObject)) || XkeeyState)
                     {
                         XkeeyState = false;
                         break;
                     }
 
                     // 줄어들기 ★ -> 표적크기까지 바꿔주기 ★
-                    currentTimeCircleClone.transform.localScale 
-                        = Vector2.MoveTowards(currentTimeCircleClone.transform.localScale, new Vector3(0.2f,0.2f), 0.024f); //※☆★ 빌드하면 나누기 4됨
+                    currentTimeCircleClone.transform.localScale = Vector2.MoveTowards(currentTimeCircleClone.transform.localScale, new Vector3(0.2f,0.2f), 1.5f * Time.unscaledDeltaTime); //※☆★ 빌드하면 나누기 4됨
 
                     // 누르는 타이밍 끝남(X 처리)
                     if (!(finalList[i].transform.localScale.x - currentTimeCircleClone.transform.localScale.x <= 0.1f))
@@ -308,7 +315,7 @@ public class PlayerParing : MonoBehaviour
                         rhythmGameState = false;       // 누르는 타이밍 끝남
                     }
                      
-                    yield return new WaitForSecondsRealtime(0.01f);
+                    yield return null;
                 }
 
                 // 마지막 노드에서 카메라 화면전환 바로 안 되도록
@@ -330,43 +337,57 @@ public class PlayerParing : MonoBehaviour
             
             // 카메라 원래대로 복귀
             CameraController.instance.focusPoint = null;
-            CameraController.instance.focusIn  = false;
+            CameraController.instance.focusIn    = false;
             CameraController.instance.mainCam.orthographicSize = CameraController.instance.originOrthographicSize;
             CameraController.instance.transform.position
                 = new Vector3(CameraController.instance.target.transform.position.x,CameraController.instance.target.transform.position.y,CameraController.instance.transform.position.z);
             createPoint.transform.position = originLineCreateMovePoint;  // 초기 위치 복귀
+            
             yield return new WaitForSecondsRealtime(1.0f);           // 멈췄다가 터지는 연출
             Time.timeScale = 1.0f;
             Time.fixedDeltaTime = Time.timeScale * 0.02f; 
             paringState = true;                                          // 스킬사용 상태
-
+            UIController.instance.gageSlider.value += paringSuccesPlusGage;
+            
             // 상태변경 해줘야 할 불렛이 있고,
             for (int i = 0; i < destroyList.Count; i++)
             {
                 // 레이저 레이저의 경우(1가지)
                 //  -> 터지기
-                if (destroyList[i].GetComponent<EnemyBullet>().beamBool == true)
+                if (destroyList[i].GetComponent<EnemyBullet>().beamBool)
                 {
                     Instantiate(boomPrefabs, destroyList[i].transform.position, quaternion.identity);
+                    UIController.instance.gageSlider.value += 0.02f;
                     Destroy(destroyList[i]);
                 }
                 
                 // 미사일 해킹의 경우(2가지)
-                // -> 역추적 할 적이 있다면 -> 역추적
+                // 경우 1 : 역추적 할 적이 있다면 -> 역추적
                 int minIndex = 0;
-                if (destroyList[i].GetComponent<EnemyBullet>().missileBool == true && 
-                    enemyFinalList.Count != 0)
+                if (destroyList[i].GetComponent<EnemyBullet>().missileBool&& enemyFinalList.Count != 0)
                 {
                     // 거리가 가장 짧은 적 구하기
                     // (2개 이상이면 for 작동)
                     // (1개면 minIndex = 0)
                     for (int j = 1; j < enemyFinalList.Count; j++)
                     {
-                        if(Vector2.Distance(destroyList[i].transform.position, enemyFinalList[j-1].transform.GetChild(0).position)>
-                           Vector2.Distance(destroyList[i].transform.position, enemyFinalList[j].transform.GetChild(0).position))
+                        if (enemyFinalList[j - 1].GetComponent<EnemyController>() && enemyFinalList[j].GetComponent<EnemyController>())
                         {
-                            minIndex = j;
+                            if (Vector2.Distance(destroyList[i].transform.position, enemyFinalList[j - 1].transform.GetChild(0).position) > 
+                                Vector2.Distance(destroyList[i].transform.position, enemyFinalList[j].transform.GetChild(0).position))
+                            {
+                                minIndex = j;
+                            }
                         }
+                        else
+                        {
+                            if (Vector2.Distance(destroyList[i].transform.position, enemyFinalList[j - 1].transform.position) > 
+                                Vector2.Distance(destroyList[i].transform.position, enemyFinalList[j].transform.position))
+                            {
+                                minIndex = j;
+                            }
+                        }
+                        
                     }
                     
                     if(enemyFinalList[minIndex].CompareTag("Enemy"))
@@ -374,7 +395,7 @@ public class PlayerParing : MonoBehaviour
                     else if(enemyFinalList[minIndex].CompareTag("BossBody"))
                         destroyList[i].GetComponent<EnemyBullet>().currentTarget =  enemyFinalList[minIndex].transform;
                 }
-                // 역추적 할 적이 없다면 -> 터지기
+                // 경우 2 : 역추적 할 적이 없다면 -> 터지기
                 else
                 {
                     Instantiate(boomPrefabs, destroyList[i].transform.position, quaternion.identity);
@@ -382,6 +403,7 @@ public class PlayerParing : MonoBehaviour
                 }
                 
             }
+            
             enemyFinalList.Clear();
             
             destroyList.Clear();    // 남아있는 것 클리어
@@ -405,7 +427,7 @@ public class PlayerParing : MonoBehaviour
         // -1 때 누르지 못하도록
         if (currentCheckFinalListNum != -1)
         {
-            if (Input.GetKeyDown(KeyCode.X) && keyPressState == false && rhythmGameState == true)
+            if (Input.GetKeyDown(KeyCode.X) && keyPressState == false && rhythmGameState)
             {
                 //bool keyState = true;
                 // 초록
@@ -416,6 +438,7 @@ public class PlayerParing : MonoBehaviour
                     if (!destroyList.Find(((x) => x.gameObject == finalList[currentCheckFinalListNum].gameObject)))
                     {
                         destroyList.Add(finalList[currentCheckFinalListNum]);
+                        paringSuccesPlusGage += 0.03f;
                         Instantiate(greenCirclePrefabs, finalList[currentCheckFinalListNum].transform.position, quaternion.identity);
                     }
                 }
@@ -425,6 +448,7 @@ public class PlayerParing : MonoBehaviour
                     if (!destroyList.Find(((x) => x.gameObject == finalList[currentCheckFinalListNum].gameObject)))
                     {
                         destroyList.Add(finalList[currentCheckFinalListNum]);
+                        paringSuccesPlusGage += 0.01f;
                         Instantiate(yellowCirclePrefabs,finalList[currentCheckFinalListNum].transform.position, quaternion.identity);
                     }
                 }

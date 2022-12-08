@@ -38,7 +38,6 @@ public class EnemyBullet : MonoBehaviour
 
 	[HideInInspector]
 	public float anglePivotValue;
-	
 
 	private void Awake()
 	{
@@ -295,7 +294,7 @@ public class EnemyBullet : MonoBehaviour
 	    }
 	    
 	    // 밖으로 멀리 나가면 삭제
-	    if(Vector2.Distance(gameObject.transform.position,PlayerController.instance.gameObject.transform.position)>10f)
+	    if(Vector2.Distance(gameObject.transform.position,PlayerController.instance.gameObject.transform.position)>20f)
 		    Destroy(gameObject);
 
 	    // 보스방에서 보스 사망

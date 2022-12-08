@@ -23,28 +23,29 @@ public class BossWeapon : MonoBehaviour
     private GameObject laserDummyPre;
     
     [SerializeField]
-    private GameObject laserAlterLine;               // 얼터 라인
+    private GameObject laserAlterToPlayer;                 // 얼터 라인
     [SerializeField]
-    private GameObject missAlterLine;               // 얼터 라인
+    private GameObject laserAlterToAngle;                  // 얼터 라인
 
-    // 공격 속도 제한 Phase03 용
-    private float constrainSpeed = 1.0f;
-    
-    public List<GameObject>     attackPoint     = new List<GameObject>();    
-    public List<BossMissCreate> bossMissCreates = new List<BossMissCreate>();
+    public List<GameObject>     bodyAttackPoint     = new List<GameObject>();   
+    public List<GameObject>     backAttackPoint     = new List<GameObject>();    
+    //public List<BossMissCreate> bossMissCreates = new List<BossMissCreate>();
 
     private Vector3        dir;
     private float	       angle;
 
-    private int[]   randomNumArray;            // 렌덤넘값
-    private float[] randomNumArrayAgle;        // 렌덤플로트값
+    private int[]   randomNumArray;              // 렌덤넘값
+    //private float[] randomNumArrayAgle;        // 렌덤플로트값
     
+    
+    public float attackRate       = 2f;                                          // 다음 공격 
+
     private void Awake()
     {
         instance = this;
         
-        randomNumArray     = new int[3];           // 3개
-        randomNumArrayAgle = new float[3];         // 3개
+        randomNumArray     = new int[4];           // 4개
+        //randomNumArrayAgle = new float[4];         // 4개
     }
 
     public void StartFiring(AttackType attackType)
@@ -61,183 +62,228 @@ public class BossWeapon : MonoBehaviour
 
     private IEnumerator Phase1()
     {
-        yield return new WaitForSeconds(3.0f);
-        
-        float attackRate    = 2f * constrainSpeed;  // 공격 주기
-        int   count         = 12;                   // 발사체 생성 개수
-        float intervalAngle = 360 / count;          // 발사체 사이의 각도
-
-        // 원 형태로 방사하는 발사체 생성 (count 개수만큼)
-        // 공격포인트 0번
-        while (true)
-        {
-            Instantiate(lightPrefabs, attackPoint[0].transform.position, quaternion.identity);          // 라이트 생성
-            yield return new WaitForSeconds(0.5F);    
-
-            // 얼터라인
-            // for (int i = 0; i < count; ++i)
-            // {
-            //     float angle = intervalAngle * i;
-            //     Instantiate(missAlterLine, attackPoint[0].transform.position, Quaternion.Euler(0f,0f,angle));
-            // }
-            
-            //yield return new WaitForSeconds(5F);
-            
-            for (int i = 0; i < count; ++i)
-            {
-                // 발사체 이동 방향(각도)
-                // // weightAngle이 0일때
-                // 0 + 12 * 0 = 0  도
-                // 0 + 12 * 1 = 12 도
-                // 0 + 12 * 2 = 24 도
-                // .......... = 360도 -> 30개(=count)의 오브젝트가 각 방향으로 발사 됨.
-                // weightAngle이 0 1 2 3 씩 증가하면서 무적존을 없애 줌.
-                float angle = intervalAngle * i;
-                // 발사체 생성
-                Instantiate(missilePre, attackPoint[0].transform.position, Quaternion.Euler(0f,0f,angle));
-            }
-
-            // attackRate 시간만큼 대기
-        yield return new WaitForSeconds(attackRate);
-        }
-    }
-
-    private IEnumerator Phase2()
-    {
-        // 팔 펴지는 시간
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(3.0f);                                  // 팔 펴지는 시간
         UIController.instance.bossSlider.gameObject.SetActive(true);            // 보스 HP슬라이더 보이게
         
-        float   attackRate       = 2f * constrainSpeed;
         while (true)
         {
-            while (true)
+            var randomAttackNum = Random.Range(0, 4);                       // 공격선택
+
+            
+            // 공격루틴(배경에서 플레이어에게 한개씩 10개 쏘기)
+            if (randomAttackNum == 0)
             {
-                for (int j = 0; j < randomNumArray.Length; j++)
+                for (int i = 0; i < backAttackPoint.Count; i++)
                 {
-                    randomNumArray[j] = Random.Range(1, 11);                    // 1~ 10 
+                    dir = ((PlayerController.instance.transform.position) - backAttackPoint[i].transform.position).normalized;
+                    angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                    Instantiate(laserPre, backAttackPoint[i].transform.position, Quaternion.Euler(0, 0, angle));           // 미사일 생성(angle)
+                    Instantiate(laserAlterToPlayer, backAttackPoint[i].transform.position, quaternion.identity);       // 얼터라인(생성될 때의 direction)
+                    yield return new WaitForSeconds(0.1F);
+                }
+            }
+            
+            // 공격루틴(배경에서 플레이어에게 한번에 10개 쏘기 - 원형)
+            if (randomAttackNum ==1)
+            {
+                for (int i = 0; i < backAttackPoint.Count; i++)
+                {
+                    dir = ((PlayerController.instance.transform.position) - backAttackPoint[i].transform.position).normalized;
+                    angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                    Instantiate(laserPre, backAttackPoint[i].transform.position, Quaternion.Euler(0, 0, angle));           // 미사일 생성(angle)
+                    Instantiate(laserAlterToPlayer, backAttackPoint[i].transform.position, quaternion.identity);       // 얼터라인(생성될 때의 direction)
+                }
+            }
+            
+            // 공격루틴(손가락 플레이어 레이저 4개 * 3번)
+            if (randomAttackNum == 2)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    // 생성위치 중복없이 선택
+                    while (true)
+                    {
+                        for (int j = 0; j < randomNumArray.Length; j++)
+                        {
+                            if (j % 2 == 0)
+                                randomNumArray[j] = Random.Range(0, 5); // 0~ 4      0번과 2번
+                            else
+                                randomNumArray[j] = Random.Range(5, 10); // 5~ 9     1번과 3번
+
+                        }
+
+                        if (randomNumArray[0] != randomNumArray[2] &&
+                            randomNumArray[1] != randomNumArray[3]) // 0번과 2번 - 1번과 3번 값 다른지 확인
+                            break;
+                    }
+
+                    // 라이트생성
+                    for (int i = 0; i < randomNumArray.Length; i++)
+                    {
+                        Instantiate(lightPrefabs, bodyAttackPoint[randomNumArray[i]].transform.position, quaternion.identity);
+                    }
+
+                    yield return new WaitForSeconds(0.2F);
+
+                    // 미사일 + 얼터라인
+                    for (int i = 0; i < randomNumArray.Length; i++)
+                    {
+                        dir = (PlayerController.instance.transform.position - bodyAttackPoint[randomNumArray[i]].transform.position).normalized;
+                        angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                        Instantiate(laserPre, bodyAttackPoint[randomNumArray[i]].transform.position, Quaternion.Euler(0, 0, angle));           // 미사일 생성(angle)
+                        Instantiate(laserAlterToPlayer, bodyAttackPoint[randomNumArray[i]].transform.position, quaternion.identity);       // 얼터라인(생성될 때의 direction)
+                    }
+                }
+            }
+            
+            // // 중간중간 미사일 4개 생성(0~10이여서 11개지만,  10군데에서만 발사하기)
+            if (randomAttackNum == 3)
+            {
+                // 생성위치 중복없이 선택
+                while (true)
+                {
+                    for (int j = 0; j < randomNumArray.Length; j++)
+                    {
+                        if (j % 2 == 0)
+                            randomNumArray[j] = Random.Range(0, 5); // 0~ 4      0번과 2번
+                        else
+                            randomNumArray[j] = Random.Range(5, 10); // 5~ 9     1번과 3번
+                
+                    }
+                
+                    if (randomNumArray[0] != randomNumArray[2] &&
+                        randomNumArray[1] != randomNumArray[3]) // 0번과 2번 - 1번과 3번 값 다른지 확인
+                        break;
                 }
                 
-                for (int j = 0; j < randomNumArray.Length; j++)
+                // 미사일 + 얼터라인
+                for (int i = 0; i < randomNumArray.Length; i++)
                 {
-                    Debug.Log(j + "의 값 = " +randomNumArray[j]);
+                    Instantiate(missilePre, backAttackPoint[randomNumArray[i]].transform.position, Quaternion.identity);           // 미사일 생성(angle)
                 }
-
-                if (randomNumArray[0] != randomNumArray[1] && randomNumArray[1] != randomNumArray[2] && randomNumArray[0] != randomNumArray[2]) 
-                    break;
-            }
-            
-            // 라이트생성
-            for (int i = 0; i < randomNumArray.Length; i++)
-            {
-                Instantiate(lightPrefabs, attackPoint[randomNumArray[i]].transform.position, quaternion.identity);          // 라이트 생성
-            }
-            
-            // 앵글값 저장
-            for (int i = 0; i < randomNumArray.Length; i++)
-            {
-                dir   = (PlayerController.instance.transform.position - attackPoint[randomNumArray[i]].transform.position).normalized; 
-                angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                randomNumArrayAgle[i] = angle;
             }
 
-            // 얼터라인 
-            for (int i = 0; i < randomNumArray.Length; i++)
+            if (randomAttackNum != 3)
             {
-                Instantiate(laserAlterLine, attackPoint[randomNumArray[i]].transform.position,Quaternion.Euler(0,0,randomNumArrayAgle[i]));          // 얼터라인
+                // attackRate 시간만큼 대기
+                yield return new WaitForSeconds(attackRate);
             }
             
-            yield return new WaitForSeconds(0.15F);
-            
-            // 미사일발사
-            for (int i = 0; i < randomNumArray.Length; i++)
-            {
-                Instantiate(laserPre, attackPoint[randomNumArray[i]].transform.position,Quaternion.Euler(0,0,randomNumArrayAgle[i]));               // 미사일 생성
-            }
-
-            // 발사체 생성(공격생성포인트 1~10 손가락)
-            // for (int i = 1; i < 11; i++)
-            // {
-            //     Instantiate(lightPrefabs, attackPoint[i].transform.position, quaternion.identity);          // 라이트 생성
-            //     dir   = (PlayerController.instance.transform.position - attackPoint[i].transform.position).normalized; 
-            //     angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            //     Instantiate(laserAlterLine, attackPoint[i].transform.position,Quaternion.Euler(0,0,angle));          // 얼터라인
-            //     
-            //     yield return new WaitForSeconds(0.3F);
-            //     
-            //     Instantiate(laserPre, attackPoint[i].transform.position,Quaternion.Euler(0,0,angle));           // 미사일 생성
-            //     
-            //     yield return new WaitForSeconds(0.1F);
-            // }
-
-            // attackRate 시간만큼 대기
-            yield return new WaitForSeconds(attackRate);
         }
     }
     
-    private IEnumerator Phase3()
+    private IEnumerator Phase2()
     {
         // 애니메이션 재생시간
         yield return new WaitForSeconds(6.0f);
-        
-        //float attackRate  = 1f;             // 공격 주기
-        int   cycleAttack = 5;
-        int   count       = 20;               // 발사체 생성 개수
 
         while (true)
         {
-                // 3-1
-                // 하늘로 쏳아 올리기
-                for (int j = 0; j < cycleAttack; j++)
+                var randomAttackNum = Random.Range(0, 5);                       // 공격선택
+                
+                // 공격패턴(하늘로 더미레이저를 쏳아 올리고, 무작위 난사)
+                if (randomAttackNum == 0)
                 {
+                    int   count       = 100;               // 발사체 생성 개수
                     for (int i = 0; i < count; i++)
                     {
-                        angle = Random.Range(30f, 150f);
-                        Instantiate(laserDummyPre, attackPoint[11].transform.position, Quaternion.Euler(0f,0f,angle));
-                        var randTime = Random.Range(0.02f, 0.05f);
-                        yield return new WaitForSeconds(randTime);
+                        var randRngle = Random.Range(30f, 150f);
+                        Instantiate(laserDummyPre, bodyAttackPoint[11].transform.position, Quaternion.Euler(0f, 0f, randRngle));
+                        var randTime = Random.Range(0.05f, 0.1f);
+                        yield return new WaitForSeconds(randTime);      // 1.5초 ~ 3초동안 하늘로 발사
                     }
-                }
-                yield return new WaitForSeconds(5);
-                // 하늘에서 공격 뿌리기
-                for (int i = 0; i < 2; i++)
-                {
-                    bossMissCreates[i].phaseSpwanState = true;
-                }
-                // 패턴 딜레이
-                yield return new WaitForSeconds(5);
-                for (int i = 0; i < 2; i++)
-                {
-                    bossMissCreates[i].phaseSpwanState = false;
-                }
-                yield return new WaitForSeconds(5);
-            
-                
-                // 3 - 2
-                // 하늘 뿌리기
-                for (int j = 0; j < cycleAttack-2; j++)     // 3번
-                {
-                    for (int i = 0; i < count/2; i++)       // 10개
+
+                    yield return new WaitForSeconds(5);
+                    
+                    for (int i = 0; i < count / 2; i++)
                     {
-                        angle = UnityEngine.Random.Range(30f, 150f);
-                        Instantiate(missileDummyPre, attackPoint[11].transform.position, Quaternion.Euler(0f,0f,angle));
+                        var randRngle = Random.Range(285f, 330f);   // 왼쪽
+                        Instantiate(laserPre, backAttackPoint[8].transform.position, Quaternion.Euler(0f, 0f, randRngle));
+                        randRngle = Random.Range(210f, 255f);           // 오른쪽
+                        Instantiate(laserPre, backAttackPoint[2].transform.position, Quaternion.Euler(0f, 0f, randRngle));
+                        
+                        var randTime = Random.Range(0.1f, 0.2f);
+                        yield return new WaitForSeconds(randTime);      
                     }
-                    yield return new WaitForSeconds(1f);
                 }
-                yield return new WaitForSeconds(3);
-                // 하늘에서 공격 뿌리기
-                for (int i = 2; i < 12; i++)
+
+                // 공격패턴(하늘로 미사일 쏳아 올리고, 10개에서 한번에 날라오기)
+                if (randomAttackNum == 1)
                 {
-                    bossMissCreates[i].GetComponent<BossMissCreate>().StartCoroutine("MissCoroutine");
+                    for (int i = 0; i < 10; i++)
+                    {
+                        var angleValue = 30 + i * 12;        //30~138
+                        Instantiate(missileDummyPre, bodyAttackPoint[11].transform.position, Quaternion.Euler(0f, 0f, angleValue));
+                    }
+                    
+                    yield return new WaitForSeconds(3);
+                    
+                    for (int i = 0; i < backAttackPoint.Count; i++)
+                    {
+                        // dir = ((PlayerController.instance.transform.position) - backAttackPoint[i].transform.position).normalized;
+                        // angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                        Instantiate(missilePre, backAttackPoint[i].transform.position, Quaternion.identity);           // 미사일 생성
+                    }
                 }
-                // 패턴 딜레이
-                yield return new WaitForSeconds(5);
-                for (int i = 2; i < 12; i++)
+                
+                // 공격루틴(배경에서 플레이어에게 한개씩 10개 쏘기)
+                if (randomAttackNum == 2)
                 {
-                    bossMissCreates[i].GetComponent<BossMissCreate>().StopCoroutine("MissCoroutine");
+                    for (int i = 0; i < backAttackPoint.Count; i++)
+                    {
+                        dir = ((PlayerController.instance.transform.position) - backAttackPoint[i].transform.position).normalized;
+                        angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                        Instantiate(laserPre, backAttackPoint[i].transform.position, Quaternion.Euler(0, 0, angle));           // 미사일 생성(angle)
+                        Instantiate(laserAlterToPlayer, backAttackPoint[i].transform.position, quaternion.identity);       // 얼터라인(생성될 때의 direction)
+                        yield return new WaitForSeconds(0.05F);
+                    }
                 }
-                yield return new WaitForSeconds(5);
             
+                // 공격루틴(배경에서 플레이어에게 한번에 10개 쏘기 - 원형)
+                if (randomAttackNum ==3)
+                {
+                    for (int i = 0; i < backAttackPoint.Count; i++)
+                    {
+                        dir = ((PlayerController.instance.transform.position) - backAttackPoint[i].transform.position).normalized;
+                        angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                        Instantiate(laserPre, backAttackPoint[i].transform.position, Quaternion.Euler(0, 0, angle));           // 미사일 생성(angle)
+                        Instantiate(laserAlterToPlayer, backAttackPoint[i].transform.position, quaternion.identity);       // 얼터라인(생성될 때의 direction)
+                    }
+                }
+                
+                // // 중간중간 미사일 4개 생성(0~10이여서 11개지만,  10군데에서만 발사하기)
+                if (randomAttackNum == 4)
+                {
+                    // 생성위치 중복없이 선택
+                    while (true)
+                    {
+                        for (int j = 0; j < randomNumArray.Length; j++)
+                        {
+                            if (j % 2 == 0)
+                                randomNumArray[j] = Random.Range(0, 5); // 0~ 4      0번과 2번
+                            else
+                                randomNumArray[j] = Random.Range(5, 10); // 5~ 9     1번과 3번
+                
+                        }
+                
+                        if (randomNumArray[0] != randomNumArray[2] &&
+                            randomNumArray[1] != randomNumArray[3]) // 0번과 2번 - 1번과 3번 값 다른지 확인
+                            break;
+                    }
+                
+                    // 미사일 + 얼터라인
+                    for (int i = 0; i < randomNumArray.Length; i++)
+                    {
+                        Instantiate(missilePre, backAttackPoint[randomNumArray[i]].transform.position, Quaternion.identity);           // 미사일 생성(angle)
+                    }
+                }
+
+                if (randomAttackNum != 4)
+                {
+                    // attackRate 시간만큼 대기
+                    yield return new WaitForSeconds(attackRate);
+                }
+                
         }
     }
 

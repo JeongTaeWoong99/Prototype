@@ -6,21 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Sceen/2.JBGJ.unity
-    guid: d8ac9774791acd74c8df0d6824fa4651
-  - enabled: 1
-    path: Assets/Scenes/0.Title.unity
+    path: Assets/Settings/Scenes/URP2DSceneTemplate.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/1.JBGJ.unity
-    guid: 33afdf9aef21f2d43bef9c163d87b22d
+    path: Assets/Sceen/1. Tutorial.unity
+    guid: 41f897fbef15d9f44964c55c58b4e951
   - enabled: 1
-    path: Assets/Scenes/New Folder/1.1.Seen.unity
-    guid: c03ec417bacb48840a2a07a72be16eda
+    path: Assets/Sceen/2.Platform.unity
+    guid: 2a2586b337493ef42abc783aee4bc688
   - enabled: 1
-    path: Assets/Scenes/New Folder/1.2.Seen.unity
-    guid: 9f40121336ffbbc44af0d7a35d9d4018
-  - enabled: 1
-    path: Assets/Scenes/New Folder/Ending_1.unity
-    guid: edfca0cd9d67c1d41a940bc3c2cc6dd1
+    path: Assets/Sceen/3.BOSS.unity
+    guid: d8ac9774791acd74c8df0d6824fa4651
   m_configObjects: {}

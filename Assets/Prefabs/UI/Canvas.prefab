@@ -1949,11 +1949,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 500471993191709567}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -909.25, y: 500.5}
+  m_AnchoredPosition: {x: -909.25006, y: 500.49988}
   m_SizeDelta: {x: 101.5, y: 79}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &500471992629829504
@@ -2164,9 +2164,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 500471993453336148}
-  - {fileID: 500471993282518347}
   - {fileID: 500471992629829506}
+  - {fileID: 500471993282518347}
+  - {fileID: 500471993453336148}
   - {fileID: 848633638}
   - {fileID: 500471993322083359}
   - {fileID: 3062774635556415202}
@@ -2281,11 +2281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UITxet: {fileID: 7188676449144138883}
-  storyTalk:
-  - "0. \uC6D0\uCE59"
-  - "1. \uC6D0\uCE59"
-  - "2. \uC6D0\uCE59"
-  - "3. \uC6D0\uCE59"
+  storyTalk: []
   storyTalkEndState: 0
 --- !u!114 &5794098767959674075
 MonoBehaviour:
@@ -2384,7 +2380,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -728.5, y: 453}
+  m_AnchoredPosition: {x: -728.50006, y: 452.99982}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &500471993282518345
@@ -2595,7 +2591,7 @@ RectTransform:
   - {fileID: 500471992301916002}
   - {fileID: 500471993631190470}
   m_Father: {fileID: 500471993191709567}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

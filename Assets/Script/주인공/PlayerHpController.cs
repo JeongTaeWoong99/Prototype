@@ -35,14 +35,6 @@ public class PlayerHpController : MonoBehaviour
         if (invincibleCount >= 0)
         {
             invincibleCount -= Time.unscaledDeltaTime;
-
-            // 투명도 정상화
-            // if (invincibleCount <= 0)
-            // {
-            //     var color = PlayerController.instance.bodySR.color;
-            //     color = new Color(color.r, color.g, color.b, 1f);
-            //     PlayerController.instance.bodySR.color = color;
-            // }
         }
 
         // 피격상태 체크해서, 카메라 흔들기
@@ -59,8 +51,9 @@ public class PlayerHpController : MonoBehaviour
             if(PlayerController.instance.skillState || PlayerParing.instance.paringState)     // 기본공격은 회피하도록 스킬은 무시하고 애니메이션 재생하도록
                PlayerController.instance.animator.SetTrigger("TakeHit");                                 // 히트시 애니메이션 재생 여부(안 하게되면 스킬상태 초기화 문제가 생김)
 
-            invincibleCount = damageInvincibleLength;   // invincibleCount(남은시간)을 damageInvincibleLength(초기무적시간)으로 초기화
-            currentHealth  -= damageInt;                // 체력 감소
+            invincibleCount = damageInvincibleLength;        // invincibleCount(남은시간)을 damageInvincibleLength(초기무적시간)으로 초기화
+            currentHealth  -= damageInt;                     // 체력 감소
+            UIController.instance.gageSlider.value += 0.01f; // 피격시 게이지 상승
             
             //너백(대미지를 입힌 대상의 위치정보를 가져옴.)
             int random = Random.Range(10, 20);
@@ -68,11 +61,7 @@ public class PlayerHpController : MonoBehaviour
                 PlayerController.instance.theRB.AddForce(-transform.right * random);
             else
                 PlayerController.instance.theRB.AddForce(transform.right * random);
-
-            // 투명도 50% 설정
-            // var color = PlayerController.instance.bodySR.color;
-            // color = new Color(color.r, color.g, color.b, 0.5f);
-            // PlayerController.instance.bodySR.color = color;
+            
             
             // 플레이어 사망했을 때
             if (currentHealth <= 0)
@@ -91,7 +80,7 @@ public class PlayerHpController : MonoBehaviour
 
             // UI값 갱신
             UIController.instance.healthSlider.value = currentHealth;                                           // 데미지를 입은 후 변환
-            UIController.instance.healthText.text = currentHealth.ToString() + " / " + maxHealth.ToString();    // 데미지를 입은 후 변환
+            UIController.instance.healthText.text    = currentHealth + " / " + maxHealth;    // 데미지를 입은 후 변환
         }
     }
 
@@ -99,10 +88,6 @@ public class PlayerHpController : MonoBehaviour
     public void MakeInvincible(float length)
     {
         invincibleCount = length;
-        // 바로 투명도 50%되지 않고, 애니메이션에서 점진적으로  1 -> 0.5 -> 1
-        //var color = PlayerController.instance.bodySR.color;
-        //color = new Color(color.r, color.g,color.b, 0.5f);
-       // PlayerController.instance.bodySR.color = color;
     }
     
     public void CameraShakeCheck()
