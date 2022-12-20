@@ -68,6 +68,7 @@ public class EnemyBullet : MonoBehaviour
 			fixedDeltaTimeValue = 50f * Time.fixedDeltaTime;								// 기본 50 * 0.02  = 1;
 																							// 변화 50 * 0.002 = 0.1; (대쉬)
 																							// 변화 50 * 0.002 ~ 0    (Z키)
+			Debug.Log(fixedDeltaTimeValue);
 			
 			// 일정범위 안으로 들어오면, 더이상 위치를 따라가는게 아니라 현재 방향으로 그냥 돌진
 			if (Vector2.Distance(currentTarget.transform.position, transform.position) >= 0.5f)

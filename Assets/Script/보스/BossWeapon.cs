@@ -67,7 +67,7 @@ public class BossWeapon : MonoBehaviour
         
         while (true)
         {
-            var randomAttackNum = Random.Range(0, 4);                       // 공격선택
+            var randomAttackNum = Random.Range(0, 3);                       // 공격선택
 
             
             // 공격루틴(배경에서 플레이어에게 한개씩 10개 쏘기)
@@ -135,9 +135,14 @@ public class BossWeapon : MonoBehaviour
                     }
                 }
             }
+
+            // attackRate 시간만큼 대기
+            yield return new WaitForSeconds(attackRate);
+
+            int randrandRnum = Random.Range(0,3); // 0~ 2  33% 확률로 
             
             // // 중간중간 미사일 4개 생성(0~10이여서 11개지만,  10군데에서만 발사하기)
-            if (randomAttackNum == 3)
+            if (randrandRnum == 0)
             {
                 // 생성위치 중복없이 선택
                 while (true)
@@ -163,12 +168,6 @@ public class BossWeapon : MonoBehaviour
                 }
             }
 
-            if (randomAttackNum != 3)
-            {
-                // attackRate 시간만큼 대기
-                yield return new WaitForSeconds(attackRate);
-            }
-            
         }
     }
     
@@ -179,7 +178,7 @@ public class BossWeapon : MonoBehaviour
 
         while (true)
         {
-                var randomAttackNum = Random.Range(0, 5);                       // 공격선택
+                var randomAttackNum = Random.Range(0, 4);                       // 공격선택
                 
                 // 공격패턴(하늘로 더미레이저를 쏳아 올리고, 무작위 난사)
                 if (randomAttackNum == 0)
@@ -251,8 +250,13 @@ public class BossWeapon : MonoBehaviour
                     }
                 }
                 
+                // attackRate 시간만큼 대기
+                yield return new WaitForSeconds(attackRate);
+                
+                int randrandRnum = Random.Range(0,3); // 0~ 2  33% 확률로 
+            
                 // // 중간중간 미사일 4개 생성(0~10이여서 11개지만,  10군데에서만 발사하기)
-                if (randomAttackNum == 4)
+                if (randrandRnum == 0)
                 {
                     // 생성위치 중복없이 선택
                     while (true)
@@ -278,12 +282,6 @@ public class BossWeapon : MonoBehaviour
                     }
                 }
 
-                if (randomAttackNum != 4)
-                {
-                    // attackRate 시간만큼 대기
-                    yield return new WaitForSeconds(attackRate);
-                }
-                
         }
     }
 
