@@ -20,10 +20,9 @@ public class MainMenu : MonoBehaviour
 	{
 		if (continueBorad.gameObject.activeInHierarchy == false)
 		{
-			Mathf.Clamp(currentNum, 0, 5);
 			if (Input.GetKeyDown(KeyCode.DownArrow))
 			{
-				if (currentNum < 4)
+				if (currentNum < UI.Count - 1)
 				{
 					UI[currentNum].color = new Color(1f, 1f, 1f, 1f);
 					currentNum++;
@@ -49,15 +48,6 @@ public class MainMenu : MonoBehaviour
 						NewLife();
 						break;
 					case 1:
-						Continue();
-						break;
-					case 2:
-						LoadMap();
-						break;
-					case 3:
-						Achievements();
-						break;
-					case 4:
 						Exit();
 						break;
 				}

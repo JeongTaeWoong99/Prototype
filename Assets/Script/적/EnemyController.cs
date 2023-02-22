@@ -263,14 +263,6 @@ public class EnemyController : MonoBehaviour
 			deathAnim.transform.localScale = transform1.localScale;
 			Instantiate(deathAnim, transform1.position, Quaternion.identity);
 
-			// 만약 훈련용봇이면
-			// if (tutoBotBool)
-			// {
-			// 	UIAutoSystem.instance.autoEventState = false;																	// 다시 이벤트 이어서
-			// 	PlayerController.instance.theRB.gravityScale = PlayerController.instance.originGavityScale;                     // 대쉬중 부딪혔을 때, 멀리나가는 문제 !! ☆★
-			// 	UIAutoSystem.instance.autoAtion[UIAutoSystem.instance.currtAtionNum-1].objectE.activeObject.SetActive(false);	// currtAtionNum++ 됐기 때문에, -1한 값을 꺼준다.
-			// }
-			
 		}
 
 		healthSlider.value = currentHealth;
@@ -348,64 +340,6 @@ public class EnemyController : MonoBehaviour
 			}
 		}
 
-		// 팔 머리 회전감지
-		// if (lotasionState)
-		// {
-		// 	Vector2 direction = new Vector2(archergunArm.transform.position.x - PlayerController.instance.transform.position.x,
-		// 									archergunArm.transform.position.y - PlayerController.instance.transform.position.y);
-		// 	
-		// 	float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-		// 	archergunArm.transform.rotation = Quaternion.Euler(0, 0, 120f);
-		// 	archerHead.transform.rotation   = Quaternion.Euler(0, 0, 120f);
-		// 	
-			// 부드러운 움직임
-			// Quaternion angleAxis = Quaternion.AngleAxis(angle, Vector3.forward);
-			// Quaternion rotation   = Quaternion.Slerp(archergunArm.transform.rotation, angleAxis, rotateSpeed * Time.deltaTime);
-			// archergunArm.transform.rotation   = rotation;
-			// archerHead.transform.rotation     = rotation;
-			// if (transform.localScale.x == 1) // 오른쪽
-			// {
-			// 	float absAngle = Mathf.Abs(angle);
-			// 	
-			// 	if (absAngle > 120f && absAngle < 180)
-			// 	{
-			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, angle);
-			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, angle);
-			// 	}
-			// 	else if (archergunArm.transform.position.y > PlayerController.instance.transform.position.y)	// 플래이어 아래
-			// 	{
-			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, -120f);
-			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, -120f);
-			// 	}
-			// 	else if (archergunArm.transform.position.y < PlayerController.instance.transform.position.y)	// 플레이어가 위
-			// 	{
-			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, 120f);
-			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, 120f);
-			// 	}
-			// }
-			// else if(transform.localScale.x == -1)	// 왼쪽 
-			// {
-			// 	float absAngle = Mathf.Abs(angle);
-			// 	
-			// 	if (absAngle > 0f && absAngle < 60)
-			// 	{
-			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, angle);
-			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, angle);
-			// 	}
-			// 	else if (archergunArm.transform.position.y > PlayerController.instance.transform.position.y)	// 플래이어 아래
-			// 	{
-			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, -60f);
-			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, -60f);
-			// 	}
-			// 	else if (archergunArm.transform.position.y < PlayerController.instance.transform.position.y)	// 플레이어가 위
-			// 	{
-			// 		archergunArm.transform.rotation = Quaternion.Euler(0, 0, 60f);
-			// 		archerHead.transform.rotation   = Quaternion.Euler(0, 0, 60f);
-			// 	}
-			//
-			// }
-		//
-
 	}
 
 	public void MakeLaser()
@@ -413,8 +347,6 @@ public class EnemyController : MonoBehaviour
 		Instantiate(arrowPrefab, archerShootPoint.position, archerShootPoint.rotation);
 	}
 	
-	
-
 	public void Hit()
 	{
 		// Player 체크
@@ -455,16 +387,6 @@ public class EnemyController : MonoBehaviour
 		
 		
 	}
-	
-	// public void LotasionStart()
-	// {
-	// 	lotasionState = true;
-	// }
-	//
-	// public void LotasionEnd()
-	// {
-	// 	lotasionState = false;
-	// }
 
 	public void BodyActive()
 	{
@@ -478,15 +400,4 @@ public class EnemyController : MonoBehaviour
 		archergunArm.SetActive(false);
 		archerHead.SetActive(false);
 	}
-	
-	//
-	// public void WeaknessStart()
-	// {
-	// 	weaknessState = true;
-	// }
-	//
-	// public void WeaknessEnd()
-	// {
-	// 	weaknessState = false;
-	// }
 }
