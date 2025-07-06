@@ -6,7 +6,7 @@
         <tr><td><strong>기간</strong></td><td>2022.11 ~ 2022.12</td></tr>
         <tr><td><strong>인원</strong></td><td>1인 개발</td></tr>
         <tr><td><strong>역할</strong></td><td>클라이언트</td></tr>
-        <tr><td><strong>도구</strong></td><td>Unity, C#</td></tr>
+        <tr><td><strong>도구</strong></td><td>UNITY, C#</td></tr>
         <tr><td><strong>타겟 기기</strong></td><td>PC</td></tr>
         <tr><td><strong>참여 활동</strong></td><td>2022 컴퓨터공학부 게임경진대회(최우수상)</td></tr>
       </table>
@@ -16,6 +16,11 @@
     </td>
   </tr>
 </table>
+
+## 프로젝트 목적
+Unity 기반으로 제작된 프로젝트이며, 대회 출전을 목표로 제작되었습니다. 
+
+2D 플랫포머 게임의 기본 구조와 핵심 메커니즘을 직접 구현하는 데에 중점을 두었습니다.
 
 ## 인게임 사진
 <p align="center">
