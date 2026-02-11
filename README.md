@@ -14,7 +14,7 @@
       </table>
     </td>
     <td style="vertical-align: top; padding-left: 20px;">
-      <img src="https://github.com/user-attachments/assets/bf07ef04-4823-412e-89db-ffee3661116d" width="200"/>
+      <img src="Images/상장.png" width="200"/>
     </td>
   </tr>
 </table>
@@ -28,9 +28,9 @@ Unity 기반으로 제작된 프로젝트이며, 대회 참가를 목적으로 �
 
 ## 인게임 사진
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/b916d12a-ed69-49c8-a2f0-4fbf73af2eef" width="45%"/>
+  <img src="Images/인게임1.png" width="45%"/>
   &nbsp;
-  <img src="https://github.com/user-attachments/assets/a7e3216f-848e-4f80-9212-1f53b5c451f0" width="45%"/>
+  <img src="Images/인게임2.png" width="45%"/>
 </p>
 
 ## 관련 링크
